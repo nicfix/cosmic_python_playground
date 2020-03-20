@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="00b64845-c7f1-4224-8315-658f91e3b76a" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1ZMUDRTaHrDF4px1rjfhF8Gtg2Z" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/batches/tests/fixtures.py" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/batch_allocation/orm" />
+      <recent name="$PROJECT_DIR$/batch_allocation/repositories" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/batch_allocation/tests/integration" />
+      <recent name="$PROJECT_DIR$/batch_allocation/tests/unit" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="cosmic_python_playground" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="Tox" factoryName="Tox">
+      <module name="cosmic_python_playground" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unittests in tests" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="cosmic_python_playground" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../cosmic_python_playground/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/../cosmic_python_playground/tests&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Doctests">
+      <module name="cosmic_python_playground" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Unittests">
+      <module name="cosmic_python_playground" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="py.test">
+      <module name="cosmic_python_playground" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="$PROJECT_DIR$/../../datalab/configurator_api/venv/bin/python" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/batches/tests&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python tests.Unittests in tests" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="00b64845-c7f1-4224-8315-658f91e3b76a" name="Default Changelist" comment="" />
+      <created>1584648336921</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1584648336921</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="676" y="186" width="558" height="741" key="#Unittests_in_tests" timestamp="1584722705148">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state x="676" y="186" width="558" height="741" key="#Unittests_in_tests/0.30.1920.1050@0.30.1920.1050" timestamp="1584722705148" />
+    <state x="418" y="213" width="1084" height="704" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1584737513917">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state x="418" y="213" width="1084" height="704" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1584737513917" />
+    <state x="718" y="360" width="517" height="392" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1584739314356">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state x="718" y="360" width="517" height="392" key="#com.intellij.fileTypes.FileTypeChooser/0.30.1920.1050@0.30.1920.1050" timestamp="1584739314356" />
+    <state x="692" y="351" width="525" height="430" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1584730011882">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state x="692" y="351" width="525" height="430" key="#com.intellij.ide.util.TreeClassChooserDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1584730011882" />
+    <state x="737" y="284" width="436" height="545" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog" timestamp="1584724495512">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state x="737" y="284" width="436" height="545" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1584724495512" />
+    <state x="743" y="323" width="424" height="487" key="FileChooserDialogImpl" timestamp="1584724493557">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state x="743" y="323" width="424" height="487" key="FileChooserDialogImpl/0.30.1920.1050@0.30.1920.1050" timestamp="1584724493557" />
+    <state width="1897" height="239" key="GridCell.Tab.0.bottom" timestamp="1584738179177">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state width="1897" height="239" key="GridCell.Tab.0.bottom/0.30.1920.1050@0.30.1920.1050" timestamp="1584738179177" />
+    <state width="1897" height="239" key="GridCell.Tab.0.center" timestamp="1584738179177">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state width="1897" height="239" key="GridCell.Tab.0.center/0.30.1920.1050@0.30.1920.1050" timestamp="1584738179177" />
+    <state width="1897" height="239" key="GridCell.Tab.0.left" timestamp="1584738179176">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state width="1897" height="239" key="GridCell.Tab.0.left/0.30.1920.1050@0.30.1920.1050" timestamp="1584738179176" />
+    <state width="1897" height="239" key="GridCell.Tab.0.right" timestamp="1584738179177">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state width="1897" height="239" key="GridCell.Tab.0.right/0.30.1920.1050@0.30.1920.1050" timestamp="1584738179177" />
+    <state x="165" y="264" width="992" height="733" key="SettingsEditor" timestamp="1584738520949">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state x="165" y="264" width="992" height="733" key="SettingsEditor/0.30.1920.1050@0.30.1920.1050" timestamp="1584738520949" />
+    <state x="1165" y="391" width="540" height="330" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1584648637929">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state x="1165" y="391" width="540" height="330" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1584648637929" />
+  </component>
+</project>
