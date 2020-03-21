@@ -5,10 +5,10 @@ from batch_allocation.repositories.sql_alchemy import (
     OrderLineSQLAlchemyRepository,
     BatchSQLAlchemyRepository,
 )
-from tests.integration.base_test_class import BaseTestCase
+from tests.integration.base_test_class import BaseSessionTestCase
 
 
-class OrderLineRepositoryTestCase(BaseTestCase):
+class OrderLineRepositoryTestCase(BaseSessionTestCase):
     def test_get_by_order(self):
         session = OrderLineRepositoryTestCase.get_session()
         session.execute(
@@ -54,7 +54,7 @@ class OrderLineRepositoryTestCase(BaseTestCase):
         session.execute("DELETE FROM order_lines")
 
 
-class BatchRepositoryTestCase(BaseTestCase):
+class BatchRepositoryTestCase(BaseSessionTestCase):
     def test_get_batch(self):
         session = BatchRepositoryTestCase.get_session()
         session.execute(

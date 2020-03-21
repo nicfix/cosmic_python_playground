@@ -1,10 +1,10 @@
 from datetime import date
 
 from batch_allocation.model import OrderLine, Batch
-from tests.integration.base_test_class import BaseTestCase
+from tests.integration.base_test_class import BaseSessionTestCase
 
 
-class OrmMappingIntegrationTestCase(BaseTestCase):
+class OrmMappingIntegrationTestCase(BaseSessionTestCase):
     def test_get_all_order_lines(self):
         session = OrmMappingIntegrationTestCase.get_session()
         session.execute(

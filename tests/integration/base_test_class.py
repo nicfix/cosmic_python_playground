@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from tests.integration.fixtures import set_up_testing_db, tear_down_testing_db
 
 
-class BaseTestCase(TestCase):
+class BaseSessionTestCase(TestCase):
     session: Session
     engine: Engine
 

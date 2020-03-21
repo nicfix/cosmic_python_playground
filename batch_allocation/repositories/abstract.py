@@ -15,7 +15,7 @@ class OrderLineAbstractRepository(abc.ABC):
 
 class BatchAbstractRepository(abc.ABC):
     @abc.abstractmethod
-    def get(self, reference: str) -> [Batch]:
+    def get(self, reference: str) -> Batch:
         raise NotImplementedError()
 
     @abc.abstractmethod
