@@ -1,6 +1,20 @@
 from batch_allocation.adapters.repositories.abstract import BatchAbstractRepository
+from batch_allocation.domain.exceptions import OrderLineAlreadyAllocatedError
 from batch_allocation.domain.model import OrderLine, Batch
 from batch_allocation.domain import service_functions
+from batch_allocation.domain.service_functions import OutOfStockError
+
+
+class UnknownSku(Exception):
+    pass
+
+
+class OutOfStock(Exception):
+    pass
+
+
+class OrderLineAlreadyAllocatedConflict(Exception):
+    pass
 
 
 def allocate(order_line: OrderLine, batch_repository: BatchAbstractRepository) -> Batch:
@@ -15,7 +29,15 @@ def allocate(order_line: OrderLine, batch_repository: BatchAbstractRepository) -
 
     batches = batch_repository.get_by_sku(order_line.sku)
 
-    allocated_batch = service_functions.allocate_single_order_line(batches, order_line)
+    if len(batches) == 0:
+        raise UnknownSku()
+
+    try:
+        allocated_batch = service_functions.allocate_single_order_line(batches, order_line)
+    except OrderLineAlreadyAllocatedError:
+        raise OrderLineAlreadyAllocatedConflict()
+    except OutOfStockError:
+        raise OutOfStock()
 
     batch_repository.update(batch=allocated_batch)
 

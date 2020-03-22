@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from batch_allocation.domain.service_functions import OutOfStockError
 from batch_allocation.service_layer import services
+from batch_allocation.service_layer.services import OutOfStock
 from batch_allocation.tests.unit.fixtures import MockedBatchRepository
 from batch_allocation.tests.unit.test_domain import create_batch, create_order_line
 
@@ -35,5 +35,5 @@ class ServiceLayerTestCase(TestCase):
 
         batches_repository = init_repository(self.sku, self.purchased_quantity, 1)
 
-        with self.assertRaises(OutOfStockError):
+        with self.assertRaises(OutOfStock):
             services.allocate(order_line, batches_repository)
