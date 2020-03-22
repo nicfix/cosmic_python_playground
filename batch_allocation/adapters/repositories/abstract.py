@@ -1,6 +1,6 @@
 import abc
 
-from batch_allocation.model import OrderLine, Batch
+from batch_allocation.domain.model import OrderLine, Batch
 
 
 class OrderLineAbstractRepository(abc.ABC):

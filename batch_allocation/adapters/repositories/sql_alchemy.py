@@ -1,10 +1,7 @@
 from sqlalchemy.orm import Session
 
-from batch_allocation.model import OrderLine, Batch
-from batch_allocation.repositories.abstract import (
-    OrderLineAbstractRepository,
-    BatchAbstractRepository,
-)
+from batch_allocation.adapters.repositories.abstract import OrderLineAbstractRepository, BatchAbstractRepository
+from batch_allocation.domain.model import OrderLine, Batch
 
 
 class SQLAlchemyRepository(object):

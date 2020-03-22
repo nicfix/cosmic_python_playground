@@ -2,8 +2,8 @@ import random
 from datetime import date
 from unittest import TestCase
 
-from batch_allocation.model import OrderLine, Batch
-from tests.unit.fixtures import MockedOrderLineRepository, MockedBatchRepository
+from batch_allocation.domain.model import OrderLine, Batch
+from batch_allocation.tests.unit.fixtures import MockedOrderLineRepository, MockedBatchRepository
 
 
 class TestOrderLineRepository(TestCase):

@@ -1,7 +1,7 @@
 from datetime import date
 
-from batch_allocation.model import OrderLine, Batch
-from tests.integration.base_test_class import BaseSessionTestCase
+from batch_allocation.domain.model import OrderLine, Batch
+from batch_allocation.tests.integration.base_test_class import BaseSessionTestCase
 
 
 class OrmMappingIntegrationTestCase(BaseSessionTestCase):

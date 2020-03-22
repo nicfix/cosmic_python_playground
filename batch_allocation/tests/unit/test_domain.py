@@ -2,13 +2,13 @@ import uuid
 from datetime import date
 from unittest import TestCase
 
-from batch_allocation.model import (
+from batch_allocation.domain.model import (
     OrderLine,
     Batch,
-    NotEnoughQuantityAvailableError,
-    OrderLineAlreadyAllocatedError,
-    WrongSkuError,
 )
+from batch_allocation.domain.exceptions import OrderLineAlreadyAllocatedError, NotEnoughQuantityAvailableError, \
+    WrongSkuError
+from batch_allocation.domain.service_functions import allocate, OutOfStockError
 
 
 def create_order_line(sku, desired_quantity):
@@ -37,7 +37,7 @@ def create_batch_and_line(sku, available_quantity, desired_quantity):
     return batch, order_line
 
 
-class TestBatchStocking(TestCase):
+class BatchAllocationTestCase(TestCase):
     def test_create_order_line(self):
         order_ref = str(uuid.uuid4())
         product_sku = "Red Chair"
@@ -123,3 +123,45 @@ class TestBatchStocking(TestCase):
 
         with self.assertRaises(WrongSkuError):
             batch.allocate(order_line)
+
+
+class AllocateServiceFunctionTestCase(TestCase):
+
+    def test_allocate(self):
+        skus = [
+            'Red shoes',
+            'Blue laces',
+            'Black pants'
+        ]
+
+        batches = [create_batch(sku, 10) for sku in skus]
+
+        order_lines = [create_order_line(sku, 1) for sku in skus]
+
+        allocate(batches, order_lines)
+
+    def test_duplicated_order_line(self):
+        order_ref = 'order1'
+        sku = 'Red shoes'
+        order_lines = [
+            OrderLine(order_ref=order_ref, sku=sku, quantity=10),
+            OrderLine(order_ref=order_ref, sku=sku, quantity=10)
+        ]
+
+        batches = [create_batch(sku, 10) for i in range(0, 10)]
+
+        with self.assertRaises(OrderLineAlreadyAllocatedError):
+            allocate(batches, order_lines)
+
+    def test_out_of_stock_error(self):
+        order_ref = 'order1'
+        sku = 'Red shoes'
+        order_lines = [
+            OrderLine(order_ref=order_ref, sku=sku, quantity=10),
+            OrderLine(order_ref=order_ref, sku=sku, quantity=10)
+        ]
+
+        batches = [create_batch(sku, 1) for i in range(0, 10)]
+
+        with self.assertRaises(OutOfStockError):
+            allocate(batches, order_lines)

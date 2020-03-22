@@ -1,11 +1,8 @@
 from datetime import date
 
-from batch_allocation.model import OrderLine, Batch
-from batch_allocation.repositories.sql_alchemy import (
-    OrderLineSQLAlchemyRepository,
-    BatchSQLAlchemyRepository,
-)
-from tests.integration.base_test_class import BaseSessionTestCase
+from batch_allocation.adapters.repositories.sql_alchemy import OrderLineSQLAlchemyRepository, BatchSQLAlchemyRepository
+from batch_allocation.domain.model import OrderLine, Batch
+from batch_allocation.tests.integration.base_test_class import BaseSessionTestCase
 
 
 class OrderLineRepositoryTestCase(BaseSessionTestCase):

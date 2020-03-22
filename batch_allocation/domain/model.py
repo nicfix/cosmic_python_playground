@@ -1,7 +1,9 @@
+from dataclasses import dataclass
 from datetime import date
 from typing import Optional
 
-from dataclasses import dataclass
+from batch_allocation.domain.exceptions import OrderLineAlreadyAllocatedError, NotEnoughQuantityAvailableError, \
+    WrongSkuError
 
 
 @dataclass()
@@ -11,25 +13,9 @@ class OrderLine(object):
     quantity: int
 
 
-class BatchAllocationError(Exception):
-    pass
-
-
-class OrderLineAlreadyAllocatedError(BatchAllocationError):
-    pass
-
-
-class NotEnoughQuantityAvailableError(BatchAllocationError):
-    pass
-
-
-class WrongSkuError(BatchAllocationError):
-    pass
-
-
 class Batch(object):
     def __init__(
-        self, ref: str, sku: str, purchased_quantity: int, eta: Optional[date]
+            self, ref: str, sku: str, purchased_quantity: int, eta: Optional[date]
     ):
         self.ref = ref
         self.sku = sku
@@ -38,14 +24,18 @@ class Batch(object):
         self._allocated_order_lines = []
 
     @property
-    def allocated_quantity(self):
+    def allocated_quantity(self) -> int:
         return sum([line.quantity for line in self._allocated_order_lines])
 
     @property
-    def available_quantity(self):
+    def available_quantity(self) -> int:
         return self._purchased_quantity - self.allocated_quantity
 
-    def allocate(self, order_line: OrderLine):
+    def allocate(self, order_line: OrderLine) -> None:
+        """
+        :param order_line:
+        :return:
+        """
         if order_line.sku != self.sku:
             raise WrongSkuError()
 

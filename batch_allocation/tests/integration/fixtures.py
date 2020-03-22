@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-from batch_allocation.orm.orm import create_tables, drop_tables
+from batch_allocation.adapters.orm.orm import create_tables, drop_tables
 
 
 def set_up_testing_db():

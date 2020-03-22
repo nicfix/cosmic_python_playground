@@ -1,7 +1,7 @@
 from sqlalchemy import MetaData, Table, Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import mapper, relationship
 
-from batch_allocation.model import OrderLine, Batch
+from batch_allocation.domain.model import OrderLine, Batch
 
 metadata = MetaData()
 
