@@ -25,6 +25,9 @@ class MockedBatchRepository(BatchAbstractRepository):
     A mocked repository to test the interface behavior, useful to test the related services.
     """
 
+    def update(self, batch: Batch):
+        pass
+
     def __init__(self, batches: (Batch,)):
         """
         :param batches: (Batch,), the initial order_lines, this parameter has to be immutable!
@@ -33,6 +36,9 @@ class MockedBatchRepository(BatchAbstractRepository):
 
     def get(self, reference: str) -> Batch:
         return next(b for b in self.batches if b.ref == reference)
+
+    def get_by_sku(self, sku: str) -> [Batch]:
+        return [b for b in self.batches if b.sku == sku]
 
     def add(self, batch: Batch):
         self.batches.append(batch)

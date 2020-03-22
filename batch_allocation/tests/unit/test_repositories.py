@@ -79,14 +79,10 @@ class TestBatchRepository(TestCase):
 
     def test_get_batch(self):
         batch = self.repository.get(self.refs[0])
-
         self.assertEqual(self.batches[0], batch)
 
     def test_add_batch(self):
         batch = Batch(ref='new_ref', sku='Black pants', purchased_quantity=10, eta=date.today())
-
         self.repository.add(batch)
-
         retrieved_batch = self.repository.get(batch.ref)
-
         self.assertEqual(batch, retrieved_batch)

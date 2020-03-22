@@ -21,6 +21,13 @@ class OrderLineSQLAlchemyRepository(OrderLineAbstractRepository, SQLAlchemyRepos
 
 
 class BatchSQLAlchemyRepository(BatchAbstractRepository, SQLAlchemyRepository):
+
+    def update(self, batch: Batch):
+        self.add(batch)
+
+    def get_by_sku(self, sku: str) -> [Batch]:
+        return list(self.session.query(Batch).filter_by(sku=sku))
+
     def get(self, reference: str) -> Batch:
         return self.session.query(Batch).filter_by(ref=reference).one()
 

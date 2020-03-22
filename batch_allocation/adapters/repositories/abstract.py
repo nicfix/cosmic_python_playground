@@ -19,5 +19,13 @@ class BatchAbstractRepository(abc.ABC):
         raise NotImplementedError()
 
     @abc.abstractmethod
+    def get_by_sku(self, sku: str) -> [Batch]:
+        raise NotImplementedError()
+
+    @abc.abstractmethod
     def add(self, batch: Batch):
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def update(self, batch: Batch):
         raise NotImplementedError()

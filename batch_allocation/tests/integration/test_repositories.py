@@ -94,3 +94,20 @@ class BatchRepositoryTestCase(BaseSessionTestCase):
         session.execute("DELETE FROM order_lines")
 
         session.execute("DELETE FROM batches")
+
+    def test_update_batch(self):
+        session = BatchRepositoryTestCase.get_session()
+        repository = BatchSQLAlchemyRepository(session)
+
+        batch = Batch("batch-1", "RED-CHAIR", 20, date.today())
+        order_line = OrderLine("order1", "RED-CHAIR", 12)
+
+        repository.add(batch)
+
+        batch.allocate(order_line)
+
+        repository.update(batch)
+
+        batch = session.query(Batch).filter_by(ref=batch.ref).one()
+
+        self.assertEqual(batch._allocated_order_lines, [order_line])
