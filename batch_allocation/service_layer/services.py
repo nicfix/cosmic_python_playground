@@ -20,11 +20,12 @@ class OrderLineAlreadyAllocatedConflict(Exception):
 def allocate(order_line: OrderLine, batch_repository: BatchAbstractRepository) -> Batch:
     """
     Allocates an order_line given the batches already stored on database.
-
     :param order_line: OrderLine, the line that we want to allocate
     :param batch_repository: BatchAbstractRepository, the Batches repository
-    :param session: Session, a session for the ORM (this can be improved)
-    :return:
+    :raises: OrderLineAlreadyAllocatedError, in case the order line was already allocated to a batch
+    :raises: OutOfStockError, in case no batch can satisfy the request
+    :raises: UnknownSku, in case there's no batch with the same sku of the order line
+    :return: Batch, the batch that the order was allocated to
     """
 
     batches = batch_repository.get_by_sku(order_line.sku)
@@ -33,7 +34,9 @@ def allocate(order_line: OrderLine, batch_repository: BatchAbstractRepository) -
         raise UnknownSku()
 
     try:
-        allocated_batch = service_functions.allocate_single_order_line(batches, order_line)
+        allocated_batch = service_functions.allocate_single_order_line(
+            batches, order_line
+        )
     except OrderLineAlreadyAllocatedError:
         raise OrderLineAlreadyAllocatedConflict()
     except OutOfStockError:

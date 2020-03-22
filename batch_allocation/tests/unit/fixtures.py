@@ -1,4 +1,7 @@
-from batch_allocation.adapters.repositories.abstract import OrderLineAbstractRepository, BatchAbstractRepository
+from batch_allocation.adapters.repositories.abstract import (
+    OrderLineAbstractRepository,
+    BatchAbstractRepository,
+)
 from batch_allocation.domain.model import OrderLine, Batch
 
 

@@ -1,5 +1,9 @@
-from batch_allocation.domain.exceptions import BatchAllocationError, OrderLineAlreadyAllocatedError, \
-    NotEnoughQuantityAvailableError, WrongSkuError
+from batch_allocation.domain.exceptions import (
+    BatchAllocationError,
+    OrderLineAlreadyAllocatedError,
+    NotEnoughQuantityAvailableError,
+    WrongSkuError,
+)
 from batch_allocation.domain.model import Batch, OrderLine
 
 

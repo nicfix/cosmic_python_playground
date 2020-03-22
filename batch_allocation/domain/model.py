@@ -2,8 +2,11 @@ from dataclasses import dataclass
 from datetime import date
 from typing import Optional
 
-from batch_allocation.domain.exceptions import OrderLineAlreadyAllocatedError, NotEnoughQuantityAvailableError, \
-    WrongSkuError
+from batch_allocation.domain.exceptions import (
+    OrderLineAlreadyAllocatedError,
+    NotEnoughQuantityAvailableError,
+    WrongSkuError,
+)
 
 
 @dataclass()
@@ -15,7 +18,7 @@ class OrderLine(object):
 
 class Batch(object):
     def __init__(
-            self, ref: str, sku: str, purchased_quantity: int, eta: Optional[date]
+        self, ref: str, sku: str, purchased_quantity: int, eta: Optional[date]
     ):
         self.ref = ref
         self.sku = sku

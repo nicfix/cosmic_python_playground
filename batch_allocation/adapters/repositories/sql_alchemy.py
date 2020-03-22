@@ -1,6 +1,9 @@
 from sqlalchemy.orm import Session
 
-from batch_allocation.adapters.repositories.abstract import OrderLineAbstractRepository, BatchAbstractRepository
+from batch_allocation.adapters.repositories.abstract import (
+    OrderLineAbstractRepository,
+    BatchAbstractRepository,
+)
 from batch_allocation.domain.model import OrderLine, Batch
 
 
@@ -21,7 +24,6 @@ class OrderLineSQLAlchemyRepository(OrderLineAbstractRepository, SQLAlchemyRepos
 
 
 class BatchSQLAlchemyRepository(BatchAbstractRepository, SQLAlchemyRepository):
-
     def update(self, batch: Batch):
         self.add(batch)
 

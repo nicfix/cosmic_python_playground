@@ -6,8 +6,11 @@ from batch_allocation.domain.model import (
     OrderLine,
     Batch,
 )
-from batch_allocation.domain.exceptions import OrderLineAlreadyAllocatedError, NotEnoughQuantityAvailableError, \
-    WrongSkuError
+from batch_allocation.domain.exceptions import (
+    OrderLineAlreadyAllocatedError,
+    NotEnoughQuantityAvailableError,
+    WrongSkuError,
+)
 from batch_allocation.domain.service_functions import allocate, OutOfStockError
 
 
@@ -126,13 +129,8 @@ class BatchAllocationTestCase(TestCase):
 
 
 class AllocateServiceFunctionTestCase(TestCase):
-
     def test_allocate(self):
-        skus = [
-            'Red shoes',
-            'Blue laces',
-            'Black pants'
-        ]
+        skus = ["Red shoes", "Blue laces", "Black pants"]
 
         batches = [create_batch(sku, 10) for sku in skus]
 
@@ -141,11 +139,11 @@ class AllocateServiceFunctionTestCase(TestCase):
         allocate(batches, order_lines)
 
     def test_duplicated_order_line(self):
-        order_ref = 'order1'
-        sku = 'Red shoes'
+        order_ref = "order1"
+        sku = "Red shoes"
         order_lines = [
             OrderLine(order_ref=order_ref, sku=sku, quantity=10),
-            OrderLine(order_ref=order_ref, sku=sku, quantity=10)
+            OrderLine(order_ref=order_ref, sku=sku, quantity=10),
         ]
 
         batches = [create_batch(sku, 10) for i in range(0, 10)]
@@ -154,11 +152,11 @@ class AllocateServiceFunctionTestCase(TestCase):
             allocate(batches, order_lines)
 
     def test_out_of_stock_error(self):
-        order_ref = 'order1'
-        sku = 'Red shoes'
+        order_ref = "order1"
+        sku = "Red shoes"
         order_lines = [
             OrderLine(order_ref=order_ref, sku=sku, quantity=10),
-            OrderLine(order_ref=order_ref, sku=sku, quantity=10)
+            OrderLine(order_ref=order_ref, sku=sku, quantity=10),
         ]
 
         batches = [create_batch(sku, 1) for i in range(0, 10)]

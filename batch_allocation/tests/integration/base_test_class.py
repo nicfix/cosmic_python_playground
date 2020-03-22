@@ -3,7 +3,10 @@ from unittest import TestCase
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
 
-from batch_allocation.tests.integration.fixtures import set_up_testing_db, tear_down_testing_db
+from batch_allocation.tests.integration.fixtures import (
+    set_up_testing_db,
+    tear_down_testing_db,
+)
 
 
 class BaseSessionTestCase(TestCase):
