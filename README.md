@@ -17,7 +17,7 @@ $ pip install -r requirements-dev.txt
 
 ### Run tests
 ```bash
-$ pytest
+$ pytest --cov-config=.coveragerc --cov=. batch_allocation/
 ```
 
 ### Format code

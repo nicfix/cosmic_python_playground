@@ -1,0 +1,2 @@
+[run]
+omit = batch_allocation/tests/*, venv/*

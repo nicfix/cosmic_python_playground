@@ -6,7 +6,7 @@ from batch_allocation.service_layer.services import (
     UnknownSku,
     OrderLineAlreadyAllocatedConflict,
 )
-from batch_allocation.tests.unit.fixtures import MockedBatchRepository
+from batch_allocation.tests.unit.fixtures import MockedBatchRepository, MockedUnitOfWork
 from batch_allocation.tests.unit.test_domain import create_batch, create_order_line
 
 
@@ -26,7 +26,11 @@ class ServiceLayerTestCase(TestCase):
 
         batches_repository = init_repository(self.sku, self.purchased_quantity, 1)
 
-        batch = services.allocate(order_line, batches_repository)
+        uow = MockedUnitOfWork(batches_repository)
+
+        batchref = services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
+
+        batch = next(batch for batch in batches_repository.batches if batch.ref == batchref)
 
         self.assertEqual(
             self.purchased_quantity - desired_quantity, batch.available_quantity
@@ -38,8 +42,10 @@ class ServiceLayerTestCase(TestCase):
 
         batches_repository = init_repository(self.sku, self.purchased_quantity, 1)
 
+        uow = MockedUnitOfWork(batches_repository)
+
         with self.assertRaises(OutOfStock):
-            services.allocate(order_line, batches_repository)
+            services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
 
     def test_allocate_unknown_sku(self) -> None:
         desired_quantity = 10
@@ -47,8 +53,10 @@ class ServiceLayerTestCase(TestCase):
 
         batches_repository = init_repository(self.sku, self.purchased_quantity, 1)
 
+        uow = MockedUnitOfWork(batches_repository)
+
         with self.assertRaises(UnknownSku):
-            services.allocate(order_line, batches_repository)
+            services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
 
     def test_allocate_duplicated_order_line(self) -> None:
         desired_quantity = 10
@@ -56,7 +64,9 @@ class ServiceLayerTestCase(TestCase):
 
         batches_repository = init_repository(self.sku, self.purchased_quantity, 1)
 
-        services.allocate(order_line, batches_repository)
+        uow = MockedUnitOfWork(batches_repository)
+
+        services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
 
         with self.assertRaises(OrderLineAlreadyAllocatedConflict):
-            services.allocate(order_line, batches_repository)
+            services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)

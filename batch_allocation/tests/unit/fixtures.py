@@ -3,6 +3,7 @@ from batch_allocation.adapters.repositories.abstract import (
     BatchAbstractRepository,
 )
 from batch_allocation.domain.model import OrderLine, Batch
+from batch_allocation.service_layer.unit_of_work.abstract import AbstractUnitOfWork
 
 
 class MockedOrderLineRepository(OrderLineAbstractRepository):
@@ -45,3 +46,16 @@ class MockedBatchRepository(BatchAbstractRepository):
 
     def add(self, batch: Batch):
         self.batches.append(batch)
+
+
+class MockedUnitOfWork(AbstractUnitOfWork):
+
+    def __init__(self, mocked_repo: BatchAbstractRepository):
+        self.batches = mocked_repo
+        self.committed = False
+
+    def commit(self):
+        self.committed = True
+
+    def rollback(self):
+        pass
