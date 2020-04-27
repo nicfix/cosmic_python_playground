@@ -9,9 +9,9 @@ from batch_allocation.domain.model import (
 from batch_allocation.domain.exceptions import (
     OrderLineAlreadyAllocatedError,
     NotEnoughQuantityAvailableError,
-    WrongSkuError,
+    WrongSkuError, OutOfStockError,
 )
-from batch_allocation.domain.service_functions import allocate, OutOfStockError
+from batch_allocation.domain.service_functions import allocate
 
 
 def create_order_line(sku, desired_quantity):

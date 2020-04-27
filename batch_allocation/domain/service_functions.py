@@ -1,18 +1,9 @@
 from batch_allocation.domain.exceptions import (
-    BatchAllocationError,
     OrderLineAlreadyAllocatedError,
     NotEnoughQuantityAvailableError,
-    WrongSkuError,
+    WrongSkuError, SkuNotAvailableError, OutOfStockError,
 )
 from batch_allocation.domain.model import Batch, OrderLine
-
-
-class SkuNotAvailableError(BatchAllocationError):
-    pass
-
-
-class OutOfStockError(BatchAllocationError):
-    pass
 
 
 def allocate(batches: [Batch], order_lines: [OrderLine]) -> None:

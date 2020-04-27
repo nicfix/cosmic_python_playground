@@ -1,4 +1,5 @@
 from datetime import date
+from unittest import skip
 
 from batch_allocation.adapters.repositories.sql_alchemy import (
     OrderLineSQLAlchemyRepository,
@@ -8,6 +9,7 @@ from batch_allocation.domain.model import OrderLine, Batch
 from batch_allocation.tests.integration.base_test_class import BaseSessionTestCase
 
 
+@skip("We deprecated the OrderLineRepository")
 class OrderLineRepositoryTestCase(BaseSessionTestCase):
     def test_get_by_order(self):
         session = OrderLineRepositoryTestCase.get_session()

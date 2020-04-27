@@ -7,11 +7,6 @@ from batch_allocation.service_layer.unit_of_work.sql_alchemy import SqlAlchemyUn
 app = FastAPI()
 
 
-@app.get("/")
-def hello_world():
-    return {"Hello": "World"}
-
-
 class OrderLineDTO(BaseModel):
     order_ref: str
     sku: str

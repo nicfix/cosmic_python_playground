@@ -1,8 +1,7 @@
 from batch_allocation.adapters.repositories.abstract import BatchAbstractRepository
-from batch_allocation.domain.exceptions import OrderLineAlreadyAllocatedError
+from batch_allocation.domain.exceptions import OrderLineAlreadyAllocatedError, OutOfStockError
 from batch_allocation.domain.model import OrderLine, Batch
 from batch_allocation.domain import service_functions
-from batch_allocation.domain.service_functions import OutOfStockError
 from batch_allocation.service_layer.unit_of_work.abstract import AbstractUnitOfWork
 
 
@@ -51,6 +50,7 @@ def allocate(order_ref: str, sku: str, quantity: int, uow: AbstractUnitOfWork) -
         except OrderLineAlreadyAllocatedError:
             raise OrderLineAlreadyAllocatedConflict()
         except OutOfStockError:
+
             raise OutOfStock()
 
         uow.batches.update(batch=allocated_batch)

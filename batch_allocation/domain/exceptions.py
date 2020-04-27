@@ -12,3 +12,11 @@ class NotEnoughQuantityAvailableError(BatchAllocationError):
 
 class WrongSkuError(BatchAllocationError):
     pass
+
+
+class SkuNotAvailableError(BatchAllocationError):
+    pass
+
+
+class OutOfStockError(BatchAllocationError):
+    pass

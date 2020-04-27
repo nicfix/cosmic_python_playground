@@ -16,13 +16,6 @@ class FastApiAppTestCase(TestCase):
         create_tables(engine)
         self.session = Session(engine)
 
-    def test_get_hello_world(self):
-        client = TestClient(app)
-
-        response = client.get("/")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {'Hello': 'World'})
-
     def test_allocate(self):
         batch_ref = 'batch-1'
         order_ref = 'order-5'
