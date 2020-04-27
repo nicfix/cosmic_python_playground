@@ -1,8 +1,10 @@
+from typing import Tuple
+
 from batch_allocation.adapters.repositories.abstract import (
     OrderLineAbstractRepository,
-    BatchAbstractRepository,
+    BatchAbstractRepository, AbstractProductRepository,
 )
-from batch_allocation.domain.model import OrderLine, Batch
+from batch_allocation.domain.model import OrderLine, Batch, Product
 from batch_allocation.service_layer.unit_of_work.abstract import AbstractUnitOfWork
 
 
@@ -46,6 +48,18 @@ class MockedBatchRepository(BatchAbstractRepository):
 
     def add(self, batch: Batch):
         self.batches.append(batch)
+
+
+class MockedProductRepository(AbstractProductRepository):
+
+    def __init__(self, products: Tuple[Product] = ()):
+        self.products = list(products)
+
+    def get(self, sku: str) -> Product:
+        return next(p for p in self.products if p.sku == sku)
+
+    def add(self, product: Product):
+        self.products.append(product)
 
 
 class MockedUnitOfWork(AbstractUnitOfWork):
