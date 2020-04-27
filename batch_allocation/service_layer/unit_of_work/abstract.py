@@ -4,7 +4,7 @@ from batch_allocation.adapters.repositories.abstract import BatchAbstractReposit
 
 
 class AbstractUnitOfWork(abc.ABC):
-    products: BatchAbstractRepository
+    batches: BatchAbstractRepository
 
     def __enter__(self):
         pass
