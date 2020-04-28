@@ -2,9 +2,9 @@ from sqlalchemy.orm import Session
 
 from batch_allocation.adapters.repositories.abstract import (
     OrderLineAbstractRepository,
-    BatchAbstractRepository,
+    BatchAbstractRepository, AbstractProductRepository,
 )
-from batch_allocation.domain.model import OrderLine, Batch
+from batch_allocation.domain.model import OrderLine, Batch, Product
 
 
 class SQLAlchemyRepository(object):
@@ -35,4 +35,14 @@ class BatchSQLAlchemyRepository(BatchAbstractRepository, SQLAlchemyRepository):
 
     def add(self, batch: Batch):
         self.session.add(batch)
+        self.session.commit()
+
+
+class ProductSQLAlchemyRepository(AbstractProductRepository, BatchSQLAlchemyRepository):
+
+    def get(self, sku: str) -> Product:
+        return self.session.query(Product).get(sku)
+
+    def add(self, product: Product):
+        self.session.add(product)
         self.session.commit()

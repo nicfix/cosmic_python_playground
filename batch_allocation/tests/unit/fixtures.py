@@ -1,10 +1,10 @@
-from typing import Tuple
+from typing import Tuple, Iterable
 
 from batch_allocation.adapters.repositories.abstract import (
     BatchAbstractRepository, AbstractProductRepository,
 )
 from batch_allocation.domain.model import Batch, Product
-from batch_allocation.service_layer.unit_of_work.abstract import AbstractBatchesUnitOfWork
+from batch_allocation.service_layer.unit_of_work.abstract import AbstractBatchesUnitOfWork, AbstractUnitOfWork
 
 
 class MockedBatchRepository(BatchAbstractRepository):
@@ -46,7 +46,7 @@ class MockedBatchesUnitOfWork(AbstractBatchesUnitOfWork):
 
 class MockedProductRepository(AbstractProductRepository):
 
-    def __init__(self, products: Tuple[Product] = ()):
+    def __init__(self, products: Iterable[Product] = ()):
         self.products = list(products)
 
     def get(self, sku: str) -> Product:
@@ -54,3 +54,15 @@ class MockedProductRepository(AbstractProductRepository):
 
     def add(self, product: Product):
         self.products.append(product)
+
+
+class MockedProductsUnitOfWork(AbstractUnitOfWork):
+    def __init__(self, mocked_repo: AbstractProductRepository):
+        self.products = mocked_repo
+        self.committed = False
+
+    def commit(self):
+        self.committed = True
+
+    def rollback(self):
+        pass
