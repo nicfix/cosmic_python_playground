@@ -55,9 +55,17 @@ class Product:
 
     def __init__(self, sku: str, batches: List[Batch]):
         self.sku = sku
-        self.batches = batches
+        self._batches = batches
 
-    def allocate(self, order_line: OrderLine):
+    @property
+    def batches(self) -> List[Batch]:
+        return self._batches
+
+    @batches.setter
+    def batches(self, batches: List[Batch]):
+        self._batches = batches
+
+    def allocate(self, order_line: OrderLine) -> Batch:
         for batch in self.batches:
             try:
                 batch.allocate(order_line=order_line)
