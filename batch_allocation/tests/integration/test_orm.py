@@ -1,10 +1,13 @@
+import uuid
 from datetime import date
+from unittest import skip
 
-from batch_allocation.domain.model import OrderLine, Batch
+from batch_allocation.domain.model import OrderLine, Batch, Product
 from batch_allocation.tests.integration.base_test_class import BaseSessionTestCase
 
 
 class OrmMappingIntegrationTestCase(BaseSessionTestCase):
+
     def test_get_all_order_lines(self):
         session = OrmMappingIntegrationTestCase.get_session()
         session.execute(
@@ -41,6 +44,7 @@ class OrmMappingIntegrationTestCase(BaseSessionTestCase):
 
         session.execute("DELETE FROM order_lines")
 
+    @skip('No batch can be created without a product')
     def test_get_batch(self):
         session = OrmMappingIntegrationTestCase.get_session()
         session.execute(
@@ -95,3 +99,38 @@ class OrmMappingIntegrationTestCase(BaseSessionTestCase):
         session.execute("DELETE FROM order_lines")
 
         session.execute("DELETE FROM batches")
+
+    def test_store_and_retrieve_product(self):
+        session = OrmMappingIntegrationTestCase.get_session()
+        sku = 'RED-CHAIR'
+        batch = Batch(str(uuid.uuid4()), sku, 20, date.today())
+
+        product = Product(sku=sku, batches=[batch])
+
+        session.add(product)
+
+        loaded_product = session.query(Product).get(sku)
+
+        self.assertEqual(product, loaded_product)
+
+        self.assertEqual(product.batches, [batch])
+
+    def test_allocate_order_line_on_product(self):
+        session = OrmMappingIntegrationTestCase.get_session()
+        sku = 'RED-CHAIR1'
+        batch = Batch("batch-1", sku, 20, date.today())
+        order_line = OrderLine("order1", sku, 12)
+
+        product = Product(sku=sku, batches=[batch])
+
+        product.allocate(order_line)
+
+        session.add(product)
+
+        loaded_product = session.query(Product).get(sku)
+
+        loaded_batch = loaded_product.batches[0]
+
+        self.assertEqual(batch, loaded_batch)
+
+        self.assertEqual(order_line, loaded_batch.allocated_order_lines[0])

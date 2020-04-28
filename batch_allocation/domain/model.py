@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import date
-from typing import Optional, List
+from typing import Optional, List, Tuple, Iterable
 
 from batch_allocation.domain.exceptions import (
     OrderLineAlreadyAllocatedError,
@@ -25,6 +25,10 @@ class Batch(object):
         self._purchased_quantity = purchased_quantity
         self.eta = eta
         self._allocated_order_lines = []
+
+    @property
+    def allocated_order_lines(self) -> List[OrderLine]:
+        return self._allocated_order_lines
 
     @property
     def allocated_quantity(self) -> int:
@@ -53,9 +57,9 @@ class Batch(object):
 
 class Product:
 
-    def __init__(self, sku: str, batches: List[Batch]):
+    def __init__(self, sku: str, batches: Iterable[Batch] = ()):
         self.sku = sku
-        self._batches = batches
+        self._batches = list(batches)
 
     @property
     def batches(self) -> List[Batch]:
