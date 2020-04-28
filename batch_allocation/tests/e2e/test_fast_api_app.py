@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from batch_allocation.adapters.orm.orm import create_tables
 from batch_allocation.entrypoints.fast_api import app
+from batch_allocation.tests.e2e.fixtures import cleanup_product, create_product
 
 
 class FastApiAppTestCase(TestCase):
@@ -21,26 +22,14 @@ class FastApiAppTestCase(TestCase):
         order_ref = 'order-5'
         sku = 'RED-CHAIR'
         desired_quantity = 5
+        session = self.session
 
         def cleanup():
-            self.session.execute(
-                f"DELETE FROM batches WHERE ref = '{batch_ref}'"
-            )
-
-            self.session.execute(
-                f"DELETE FROM order_lines WHERE order_ref = '{order_ref}'"
-            )
-
-            self.session.commit()
+            cleanup_product(sku, batch_ref, order_ref, session)
 
         self.addCleanup(cleanup)
 
-        self.session.execute(
-            f"INSERT INTO batches (ref, sku, _purchased_quantity, eta) "
-            f"VALUES ('{batch_ref}', '{sku}', {desired_quantity}, '2020-10-10')"
-        )
-
-        self.session.commit()
+        create_product(sku, batch_ref, desired_quantity, self.session)
 
         response = self.client.post(
             "/allocate",
@@ -58,24 +47,14 @@ class FastApiAppTestCase(TestCase):
         sku = 'RED-CHAIR'
         available_quantity = 10
         desired_quantity = 20
+        session = self.session
 
         def cleanup():
-            self.session.execute(
-                f"DELETE FROM batches WHERE ref = '{batch_ref}'"
-            )
-
-            self.session.execute(
-                f"DELETE FROM order_lines WHERE order_ref = '{order_ref}'"
-            )
-
-            self.session.commit()
+            cleanup_product(sku, batch_ref, order_ref, session)
 
         self.addCleanup(cleanup)
 
-        self.session.execute(
-            f"INSERT INTO batches (ref, sku, _purchased_quantity, eta) "
-            f"VALUES ('{batch_ref}', '{sku}', {available_quantity}, '2020-10-10')"
-        )
+        create_product(sku, batch_ref, available_quantity, self.session)
 
         self.session.commit()
 

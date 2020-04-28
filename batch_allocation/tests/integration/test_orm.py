@@ -101,7 +101,19 @@ class OrmMappingIntegrationTestCase(BaseSessionTestCase):
 
         session.execute("DELETE FROM batches")
 
-    def test_store_and_retrieve_product(self):
+    def test_get_product(self):
+        session = OrmMappingIntegrationTestCase.get_session()
+        sku = str(uuid.uuid4())
+        session.execute(
+            f"INSERT INTO products (sku) "
+            f"VALUES ('{sku}')"
+        )
+
+        loaded_product = session.query(Product).get(sku)
+
+        self.assertIsInstance(loaded_product, Product)
+
+    def test_store_and_retrieve_product_with_batches(self):
         session = OrmMappingIntegrationTestCase.get_session()
         sku = 'RED-CHAIR'
         batch = Batch(str(uuid.uuid4()), sku, 20, date.today())
