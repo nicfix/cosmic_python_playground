@@ -10,7 +10,7 @@ class NotEnoughQuantityAvailableError(BatchAllocationError):
     pass
 
 
-class WrongSkuError(BatchAllocationError):
+class UnknownSkuError(BatchAllocationError):
     pass
 
 

@@ -1,7 +1,7 @@
 from batch_allocation.domain.exceptions import (
     OrderLineAlreadyAllocatedError,
     NotEnoughQuantityAvailableError,
-    WrongSkuError, SkuNotAvailableError, OutOfStockError,
+    UnknownSkuError, SkuNotAvailableError, OutOfStockError,
 )
 from batch_allocation.domain.model import Batch, OrderLine
 
@@ -44,7 +44,7 @@ def allocate_single_order_line(batches: [Batch], order_line: OrderLine) -> Batch
             return batch
         except OrderLineAlreadyAllocatedError as e:
             raise e
-        except WrongSkuError:
+        except UnknownSkuError:
             """
             One or more batches might have the wrong sku, we don't care, maybe one of the other ones will be
             compatible. We could filter it before.

@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from datetime import date
-from typing import Optional, List
+from typing import Optional, List, Tuple, Iterable
 
 from batch_allocation.domain.exceptions import (
     OrderLineAlreadyAllocatedError,
     NotEnoughQuantityAvailableError,
-    WrongSkuError, OutOfStockError,
+    UnknownSkuError, OutOfStockError,
 )
 
 
@@ -27,6 +27,10 @@ class Batch(object):
         self._allocated_order_lines = []
 
     @property
+    def allocated_order_lines(self) -> List[OrderLine]:
+        return self._allocated_order_lines
+
+    @property
     def allocated_quantity(self) -> int:
         return sum([line.quantity for line in self._allocated_order_lines])
 
@@ -40,7 +44,7 @@ class Batch(object):
         :return:
         """
         if order_line.sku != self.sku:
-            raise WrongSkuError()
+            raise UnknownSkuError()
 
         if order_line in self._allocated_order_lines:
             raise OrderLineAlreadyAllocatedError()
@@ -53,18 +57,26 @@ class Batch(object):
 
 class Product:
 
-    def __init__(self, sku: str, batches: List[Batch]):
+    def __init__(self, sku: str, batches: Iterable[Batch] = ()):
         self.sku = sku
-        self.batches = batches
+        self._batches = list(batches)
 
-    def allocate(self, order_line: OrderLine):
+    @property
+    def batches(self) -> List[Batch]:
+        return self._batches
+
+    @batches.setter
+    def batches(self, batches: List[Batch]):
+        self._batches = batches
+
+    def allocate(self, order_line: OrderLine) -> Batch:
         for batch in self.batches:
             try:
                 batch.allocate(order_line=order_line)
                 return batch
             except OrderLineAlreadyAllocatedError as e:
                 raise e
-            except WrongSkuError:
+            except UnknownSkuError:
                 """
                 One or more batches might have the wrong sku, we don't care, maybe one of the other ones will be
                 compatible. We could filter it before.

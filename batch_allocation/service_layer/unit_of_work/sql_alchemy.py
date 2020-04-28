@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from batch_allocation.adapters.repositories.sql_alchemy import BatchSQLAlchemyRepository
+from batch_allocation.adapters.repositories.sql_alchemy import ProductSQLAlchemyRepository
 from batch_allocation.service_layer import config
 from batch_allocation.service_layer.unit_of_work.abstract import AbstractUnitOfWork
 
@@ -20,7 +20,7 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
 
     def __enter__(self):
         self.session = self.session_factory()
-        self.batches = BatchSQLAlchemyRepository(self.session)
+        self.products = ProductSQLAlchemyRepository(self.session)
         return super().__enter__()
 
     def __exit__(self, *args):

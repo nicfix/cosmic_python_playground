@@ -1,7 +1,7 @@
 from batch_allocation.domain import service_functions
-from batch_allocation.domain.exceptions import OrderLineAlreadyAllocatedError, OutOfStockError
+from batch_allocation.domain.exceptions import OrderLineAlreadyAllocatedError, OutOfStockError, UnknownSkuError
 from batch_allocation.domain.model import OrderLine
-from batch_allocation.service_layer.unit_of_work.abstract import AbstractUnitOfWork
+from batch_allocation.service_layer.unit_of_work.abstract import AbstractBatchesUnitOfWork, AbstractUnitOfWork
 
 
 class UnknownSku(Exception):
@@ -37,10 +37,15 @@ def allocate(order_ref: str, sku: str, quantity: int, uow: AbstractUnitOfWork) -
 
     with uow:
 
-        batches = uow.batches.get_by_sku(order_line.sku)
+        try:
+            product = uow.products.get(order_line.sku)
+        except UnknownSkuError:
+            raise UnknownSku()
+
+        batches = product.batches
 
         if len(batches) == 0:
-            raise UnknownSku()
+            raise OutOfStock()
 
         try:
             allocated_batch = service_functions.allocate_single_order_line(
@@ -52,7 +57,7 @@ def allocate(order_ref: str, sku: str, quantity: int, uow: AbstractUnitOfWork) -
 
             raise OutOfStock()
 
-        uow.batches.update(batch=allocated_batch)
+        # uow.batches.update(batch=allocated_batch)
 
         batchref = allocated_batch.ref
 
