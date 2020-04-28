@@ -9,7 +9,7 @@ from batch_allocation.domain.model import (
 from batch_allocation.domain.exceptions import (
     OrderLineAlreadyAllocatedError,
     NotEnoughQuantityAvailableError,
-    WrongSkuError, OutOfStockError,
+    UnknownSkuError, OutOfStockError,
 )
 from batch_allocation.domain.service_functions import allocate
 
@@ -124,7 +124,7 @@ class BatchAllocationTestCase(TestCase):
 
         order_line = create_order_line("Blue table", 2)
 
-        with self.assertRaises(WrongSkuError):
+        with self.assertRaises(UnknownSkuError):
             batch.allocate(order_line)
 
 

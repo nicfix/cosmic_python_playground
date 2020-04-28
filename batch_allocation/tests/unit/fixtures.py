@@ -3,6 +3,7 @@ from typing import Tuple, Iterable
 from batch_allocation.adapters.repositories.abstract import (
     BatchAbstractRepository, AbstractProductRepository,
 )
+from batch_allocation.domain.exceptions import UnknownSkuError
 from batch_allocation.domain.model import Batch, Product
 from batch_allocation.service_layer.unit_of_work.abstract import AbstractBatchesUnitOfWork, AbstractUnitOfWork
 
@@ -50,7 +51,10 @@ class MockedProductRepository(AbstractProductRepository):
         self.products = list(products)
 
     def get(self, sku: str) -> Product:
-        return next(p for p in self.products if p.sku == sku)
+        try:
+            return next(p for p in self.products if p.sku == sku)
+        except StopIteration:
+            raise UnknownSkuError()
 
     def add(self, product: Product):
         self.products.append(product)

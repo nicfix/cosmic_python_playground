@@ -5,6 +5,7 @@ from batch_allocation.adapters.repositories.sql_alchemy import (
     OrderLineSQLAlchemyRepository,
     BatchSQLAlchemyRepository, ProductSQLAlchemyRepository,
 )
+from batch_allocation.domain.exceptions import UnknownSkuError
 from batch_allocation.domain.model import OrderLine, Batch, Product
 from batch_allocation.tests.integration.base_test_class import BaseSessionTestCase
 
@@ -131,6 +132,20 @@ class ProductRepositoryTestCase(BaseSessionTestCase):
         product = repository.get("RED-CHAIR")
 
         self.assertIsInstance(product, Product)
+
+        session.execute('DELETE FROM products where sku ="RED-CHAIR"')
+
+    def test_get_product_wrong_sku(self):
+        session = ProductRepositoryTestCase.get_session()
+        session.execute(
+            "INSERT INTO products (sku) VALUES "
+            '("RED-CHAIR")'
+        )
+
+        repository = ProductSQLAlchemyRepository(session)
+
+        with self.assertRaises(UnknownSkuError):
+            product = repository.get("BLACK-TABLE")
 
         session.execute('DELETE FROM products where sku ="RED-CHAIR"')
 

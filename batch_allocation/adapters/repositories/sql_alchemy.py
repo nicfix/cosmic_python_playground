@@ -4,6 +4,7 @@ from batch_allocation.adapters.repositories.abstract import (
     OrderLineAbstractRepository,
     BatchAbstractRepository, AbstractProductRepository,
 )
+from batch_allocation.domain.exceptions import UnknownSkuError
 from batch_allocation.domain.model import OrderLine, Batch, Product
 
 
@@ -41,7 +42,12 @@ class BatchSQLAlchemyRepository(BatchAbstractRepository, SQLAlchemyRepository):
 class ProductSQLAlchemyRepository(AbstractProductRepository, BatchSQLAlchemyRepository):
 
     def get(self, sku: str) -> Product:
-        return self.session.query(Product).get(sku)
+        product = self.session.query(Product).get(sku)
+
+        if product is None:
+            raise UnknownSkuError()
+
+        return product
 
     def add(self, product: Product):
         self.session.add(product)

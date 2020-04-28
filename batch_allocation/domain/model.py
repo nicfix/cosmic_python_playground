@@ -5,7 +5,7 @@ from typing import Optional, List, Tuple, Iterable
 from batch_allocation.domain.exceptions import (
     OrderLineAlreadyAllocatedError,
     NotEnoughQuantityAvailableError,
-    WrongSkuError, OutOfStockError,
+    UnknownSkuError, OutOfStockError,
 )
 
 
@@ -44,7 +44,7 @@ class Batch(object):
         :return:
         """
         if order_line.sku != self.sku:
-            raise WrongSkuError()
+            raise UnknownSkuError()
 
         if order_line in self._allocated_order_lines:
             raise OrderLineAlreadyAllocatedError()
@@ -76,7 +76,7 @@ class Product:
                 return batch
             except OrderLineAlreadyAllocatedError as e:
                 raise e
-            except WrongSkuError:
+            except UnknownSkuError:
                 """
                 One or more batches might have the wrong sku, we don't care, maybe one of the other ones will be
                 compatible. We could filter it before.
