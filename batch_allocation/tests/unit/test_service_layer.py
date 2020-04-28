@@ -6,7 +6,7 @@ from batch_allocation.service_layer.services import (
     UnknownSku,
     OrderLineAlreadyAllocatedConflict,
 )
-from batch_allocation.tests.unit.fixtures import MockedBatchRepository, MockedUnitOfWork
+from batch_allocation.tests.unit.fixtures import MockedBatchRepository, MockedBatchesUnitOfWork
 from batch_allocation.tests.unit.test_domain import create_batch, create_order_line
 
 
@@ -26,7 +26,7 @@ class ServiceLayerTestCase(TestCase):
 
         batches_repository = init_repository(self.sku, self.purchased_quantity, 1)
 
-        uow = MockedUnitOfWork(batches_repository)
+        uow = MockedBatchesUnitOfWork(batches_repository)
 
         batchref = services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
 
@@ -42,7 +42,7 @@ class ServiceLayerTestCase(TestCase):
 
         batches_repository = init_repository(self.sku, self.purchased_quantity, 1)
 
-        uow = MockedUnitOfWork(batches_repository)
+        uow = MockedBatchesUnitOfWork(batches_repository)
 
         with self.assertRaises(OutOfStock):
             services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
@@ -53,7 +53,7 @@ class ServiceLayerTestCase(TestCase):
 
         batches_repository = init_repository(self.sku, self.purchased_quantity, 1)
 
-        uow = MockedUnitOfWork(batches_repository)
+        uow = MockedBatchesUnitOfWork(batches_repository)
 
         with self.assertRaises(UnknownSku):
             services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
@@ -64,7 +64,7 @@ class ServiceLayerTestCase(TestCase):
 
         batches_repository = init_repository(self.sku, self.purchased_quantity, 1)
 
-        uow = MockedUnitOfWork(batches_repository)
+        uow = MockedBatchesUnitOfWork(batches_repository)
 
         services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
 

@@ -1,7 +1,7 @@
 from batch_allocation.domain import service_functions
 from batch_allocation.domain.exceptions import OrderLineAlreadyAllocatedError, OutOfStockError
 from batch_allocation.domain.model import OrderLine
-from batch_allocation.service_layer.unit_of_work.abstract import AbstractUnitOfWork
+from batch_allocation.service_layer.unit_of_work.abstract import AbstractBatchesUnitOfWork
 
 
 class UnknownSku(Exception):
@@ -16,7 +16,7 @@ class OrderLineAlreadyAllocatedConflict(Exception):
     pass
 
 
-def allocate(order_ref: str, sku: str, quantity: int, uow: AbstractUnitOfWork) -> str:
+def allocate(order_ref: str, sku: str, quantity: int, uow: AbstractBatchesUnitOfWork) -> str:
     """
     Allocates an order_line given the batches already stored on database.
     :param order_ref: str, the line that we want to allocate

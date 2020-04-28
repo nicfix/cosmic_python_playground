@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 
 from batch_allocation.adapters.repositories.sql_alchemy import BatchSQLAlchemyRepository
 from batch_allocation.service_layer import config
-from batch_allocation.service_layer.unit_of_work.abstract import AbstractUnitOfWork
+from batch_allocation.service_layer.unit_of_work.abstract import AbstractBatchesUnitOfWork
 
 engine = create_engine(
     config.get_db_uri(),
@@ -13,7 +13,7 @@ engine = create_engine(
 DEFAULT_SESSION_FACTORY = sessionmaker(bind=engine, autocommit=False, autoflush=False, )
 
 
-class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
+class SqlAlchemyBatchesUnitOfWork(AbstractBatchesUnitOfWork):
 
     def __init__(self, session_factory=DEFAULT_SESSION_FACTORY):
         self.session_factory = session_factory
