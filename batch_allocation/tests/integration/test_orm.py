@@ -74,6 +74,7 @@ class OrmMappingIntegrationTestCase(BaseSessionTestCase):
 
         session.execute("DELETE FROM batches")
 
+    @skip('No direct allocation to a batch anymore, check the product one')
     def test_allocate_order_line(self):
         session = OrmMappingIntegrationTestCase.get_session()
         batch = Batch("batch-1", "RED-CHAIR", 20, date.today())
