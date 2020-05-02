@@ -1,5 +1,6 @@
 from unittest import TestCase
 
+from batch_allocation.domain.events import AllocationRequired
 from batch_allocation.domain.model import Product
 from batch_allocation.service_layer import services
 from batch_allocation.service_layer.services import (
@@ -30,7 +31,13 @@ class ServiceLayerTestCase(TestCase):
 
         uow = MockedUnitOfWork(products_repository)
 
-        batchref = services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
+        event = AllocationRequired(
+            order_line.order_ref,
+            order_line.sku,
+            order_line.quantity
+        )
+
+        batchref = services.allocate_handler(event, uow)
 
         product = products_repository.products[0]
 
@@ -48,8 +55,14 @@ class ServiceLayerTestCase(TestCase):
 
         uow = MockedUnitOfWork(products_repository)
 
+        event = AllocationRequired(
+            order_line.order_ref,
+            order_line.sku,
+            order_line.quantity
+        )
+
         with self.assertRaises(OutOfStock):
-            services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
+            services.allocate_handler(event, uow)
 
     def test_allocate_unknown_sku(self) -> None:
         desired_quantity = 10
@@ -59,8 +72,14 @@ class ServiceLayerTestCase(TestCase):
 
         uow = MockedUnitOfWork(products_repository)
 
+        event = AllocationRequired(
+            order_line.order_ref,
+            order_line.sku,
+            order_line.quantity
+        )
+
         with self.assertRaises(UnknownSku):
-            services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
+            services.allocate_handler(event, uow)
 
     def test_allocate_duplicated_order_line(self) -> None:
         desired_quantity = 10
@@ -70,7 +89,13 @@ class ServiceLayerTestCase(TestCase):
 
         uow = MockedUnitOfWork(products_repository)
 
-        services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
+        event = AllocationRequired(
+            order_line.order_ref,
+            order_line.sku,
+            order_line.quantity
+        )
+
+        services.allocate_handler(event, uow)
 
         with self.assertRaises(OrderLineAlreadyAllocatedConflict):
-            services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
+            services.allocate_handler(event, uow)
