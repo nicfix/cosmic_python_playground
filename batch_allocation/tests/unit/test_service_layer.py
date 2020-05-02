@@ -7,20 +7,14 @@ from batch_allocation.service_layer.services import (
     UnknownSku,
     OrderLineAlreadyAllocatedConflict,
 )
-from batch_allocation.tests.unit.fixtures import MockedBatchRepository, MockedBatchesUnitOfWork, \
-    MockedProductRepository, MockedProductsUnitOfWork
+from batch_allocation.tests.unit.fixtures import MockedRepository, MockedUnitOfWork
 from batch_allocation.tests.unit.test_domain import create_batch, create_order_line
 
 
-def init_repository(sku, purchased_quantity, batches_number) -> MockedBatchRepository:
-    batches = [create_batch(sku, purchased_quantity) for i in range(0, batches_number)]
-    return MockedBatchRepository(tuple(batches))
-
-
-def init_product_repository(sku, purchased_quantity, batches_number) -> MockedProductRepository:
+def init_product_repository(sku, purchased_quantity, batches_number) -> MockedRepository:
     batches = [create_batch(sku, purchased_quantity) for i in range(0, batches_number)]
     product = Product(sku, batches)
-    return MockedProductRepository((product,))
+    return MockedRepository((product,))
 
 
 class ServiceLayerTestCase(TestCase):
@@ -34,7 +28,7 @@ class ServiceLayerTestCase(TestCase):
 
         products_repository = init_product_repository(self.sku, self.purchased_quantity, 1)
 
-        uow = MockedProductsUnitOfWork(products_repository)
+        uow = MockedUnitOfWork(products_repository)
 
         batchref = services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
 
@@ -52,7 +46,7 @@ class ServiceLayerTestCase(TestCase):
 
         products_repository = init_product_repository(self.sku, self.purchased_quantity, 1)
 
-        uow = MockedProductsUnitOfWork(products_repository)
+        uow = MockedUnitOfWork(products_repository)
 
         with self.assertRaises(OutOfStock):
             services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
@@ -63,7 +57,7 @@ class ServiceLayerTestCase(TestCase):
 
         products_repository = init_product_repository(self.sku, self.purchased_quantity, 1)
 
-        uow = MockedProductsUnitOfWork(products_repository)
+        uow = MockedUnitOfWork(products_repository)
 
         with self.assertRaises(UnknownSku):
             services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
@@ -74,7 +68,7 @@ class ServiceLayerTestCase(TestCase):
 
         products_repository = init_product_repository(self.sku, self.purchased_quantity, 1)
 
-        uow = MockedProductsUnitOfWork(products_repository)
+        uow = MockedUnitOfWork(products_repository)
 
         services.allocate(order_line.order_ref, order_line.sku, order_line.quantity, uow)
 

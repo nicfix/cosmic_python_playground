@@ -1,7 +1,7 @@
-from batch_allocation.domain import service_functions
+from batch_allocation.domain.events import AllocationRequired
 from batch_allocation.domain.exceptions import OrderLineAlreadyAllocatedError, OutOfStockError, UnknownSkuError
 from batch_allocation.domain.model import OrderLine
-from batch_allocation.service_layer.unit_of_work.abstract import AbstractBatchesUnitOfWork, AbstractUnitOfWork
+from batch_allocation.service_layer.unit_of_work.abstract import AbstractUnitOfWork
 
 
 class UnknownSku(Exception):
@@ -14,6 +14,20 @@ class OutOfStock(Exception):
 
 class OrderLineAlreadyAllocatedConflict(Exception):
     pass
+
+
+def allocate_handler(event: AllocationRequired,
+                     uow: AbstractUnitOfWork) -> str:
+    """
+    Event handler that delegates to the service function.
+    Part of a 2 steps refactoring.
+    """
+    return allocate(
+        event.order_ref,
+        event.sku,
+        event.qty,
+        uow
+    )
 
 
 def allocate(order_ref: str, sku: str, quantity: int, uow: AbstractUnitOfWork) -> str:
@@ -48,13 +62,10 @@ def allocate(order_ref: str, sku: str, quantity: int, uow: AbstractUnitOfWork) -
             raise OutOfStock()
 
         try:
-            allocated_batch = service_functions.allocate_single_order_line(
-                batches, order_line
-            )
+            allocated_batch = product.allocate(order_line)
         except OrderLineAlreadyAllocatedError:
             raise OrderLineAlreadyAllocatedConflict()
         except OutOfStockError:
-
             raise OutOfStock()
 
         # uow.batches.update(batch=allocated_batch)

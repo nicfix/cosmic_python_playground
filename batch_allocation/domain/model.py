@@ -1,7 +1,11 @@
 from dataclasses import dataclass
 from datetime import date
-from typing import Optional, List, Tuple, Iterable
+from typing import Optional, List, Iterable
 
+from sqlalchemy import orm
+
+from batch_allocation.domain import events
+from batch_allocation.domain.events import Event
 from batch_allocation.domain.exceptions import (
     OrderLineAlreadyAllocatedError,
     NotEnoughQuantityAvailableError,
@@ -57,16 +61,25 @@ class Batch(object):
 
 class Product:
 
-    def __init__(self, sku: str, batches: Iterable[Batch] = ()):
+    def __init__(self, sku: str, batches: Iterable[Batch] = (), evts: Iterable[events.Event] = ()):
         self.sku = sku
         self._batches = list(batches)
+        self._events = list(evts)
 
     @property
-    def batches(self) -> List[Batch]:
+    def events(self) -> Iterable[Event]:
+        return self._events
+
+    @events.setter
+    def events(self, evts: Iterable[Event]):
+        self._events = evts
+
+    @property
+    def batches(self) -> Iterable[Batch]:
         return self._batches
 
     @batches.setter
-    def batches(self, batches: List[Batch]):
+    def batches(self, batches: Iterable[Batch]):
         self._batches = batches
 
     def allocate(self, order_line: OrderLine) -> Batch:
@@ -88,5 +101,7 @@ class Product:
                 compatible. We could filter it before.
                 """
                 pass
+
+        self.events.append(events.OutOfStock(self.sku))
 
         raise OutOfStockError()

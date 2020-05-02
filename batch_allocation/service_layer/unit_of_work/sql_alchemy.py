@@ -1,8 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from batch_allocation.adapters.repositories.sql_alchemy import ProductSQLAlchemyRepository
-from batch_allocation.service_layer import config
+from batch_allocation.adapters.repositories.sql_alchemy import SQLAlchemyRepository
+from batch_allocation.adapters.repositories.tracking import TrackingRepository
+from batch_allocation.service_layer import config, messagebus
 from batch_allocation.service_layer.unit_of_work.abstract import AbstractUnitOfWork
 
 engine = create_engine(
@@ -13,14 +14,14 @@ engine = create_engine(
 DEFAULT_SESSION_FACTORY = sessionmaker(bind=engine, autocommit=False, autoflush=False, )
 
 
-class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
-
-    def __init__(self, session_factory=DEFAULT_SESSION_FACTORY):
+class UnitOfWork(AbstractUnitOfWork):
+    def __init__(self, session_factory=DEFAULT_SESSION_FACTORY, message_bus=messagebus):
         self.session_factory = session_factory
+        self.message_bus = message_bus
 
     def __enter__(self):
         self.session = self.session_factory()
-        self.products = ProductSQLAlchemyRepository(self.session)
+        self.products = TrackingRepository(delegate=SQLAlchemyRepository(self.session))
         return super().__enter__()
 
     def __exit__(self, *args):
@@ -29,6 +30,13 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
 
     def commit(self):
         self.session.commit()
+        self.handle_events()
+
+    def handle_events(self):
+        for product in self.products.seen:
+            while product.events:
+                event = list(product.events).pop(0)
+                self.message_bus.handle(event)
 
     def rollback(self):  # (4)
         self.session.rollback()

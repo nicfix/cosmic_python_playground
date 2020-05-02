@@ -2,14 +2,15 @@ import uuid
 from datetime import date
 from unittest import TestCase
 
-from batch_allocation.domain.model import (
-    OrderLine,
-    Batch,
-)
+from batch_allocation.domain import events
 from batch_allocation.domain.exceptions import (
     OrderLineAlreadyAllocatedError,
     NotEnoughQuantityAvailableError,
     UnknownSkuError, OutOfStockError,
+)
+from batch_allocation.domain.model import (
+    OrderLine,
+    Batch, Product,
 )
 from batch_allocation.domain.service_functions import allocate
 
@@ -126,6 +127,36 @@ class BatchAllocationTestCase(TestCase):
 
         with self.assertRaises(UnknownSkuError):
             batch.allocate(order_line)
+
+
+class ProductAllocationTestCase(TestCase):
+
+    def test_allocate(self):
+        sku = "Red shoes"
+
+        batch = create_batch(sku, 10)
+
+        order_line = create_order_line(sku, 1)
+
+        product = Product(sku, [batch])
+
+        batchref = product.allocate(order_line)
+
+        self.assertEqual(batchref, batch)
+
+    def test_allocate_out_of_stock(self):
+        sku = "Red shoes"
+
+        batch = create_batch(sku, 10)
+
+        order_line = create_order_line(sku, 20)
+
+        product = Product(sku, [batch])
+
+        with self.assertRaises(OutOfStockError):
+            batchref = product.allocate(order_line)
+
+        self.assertEqual(product.events[-1], events.OutOfStock(sku=sku))
 
 
 class AllocateServiceFunctionTestCase(TestCase):

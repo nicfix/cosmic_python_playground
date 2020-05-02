@@ -1,21 +1,17 @@
 from sqlalchemy.orm import Session
 
 from batch_allocation.adapters.repositories.abstract import (
-    OrderLineAbstractRepository,
-    BatchAbstractRepository, AbstractProductRepository,
+    AbstractRepository,
 )
 from batch_allocation.domain.exceptions import UnknownSkuError
-from batch_allocation.domain.model import OrderLine, Batch, Product
+from batch_allocation.domain.model import Product
 
 
-class SQLAlchemyRepository(object):
+class SQLAlchemyRepository(AbstractRepository):
     session: Session
 
     def __init__(self, session: Session):
         self.session = session
-
-
-class ProductSQLAlchemyRepository(AbstractProductRepository, SQLAlchemyRepository):
 
     def get(self, sku: str) -> Product:
         product = self.session.query(Product).get(sku)

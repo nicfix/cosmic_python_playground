@@ -4,11 +4,11 @@ from unittest import TestCase
 
 from batch_allocation.domain.model import Batch, Product
 from batch_allocation.tests.unit.fixtures import (
-    MockedProductRepository,
+    MockedRepository,
 )
 
 
-class TestProductRepository(TestCase):
+class RepositoryTestCase(TestCase):
     def setUp(self) -> None:
         self.refs = ["batch-1", "batch-2", "batch-3"]
         self.skus = ["Red Socks", "Blue pants", "Black chair"]
@@ -27,7 +27,7 @@ class TestProductRepository(TestCase):
 
             self.products.append(Product(sku, batches))
 
-        self.repository = MockedProductRepository(tuple(self.products))
+        self.repository = MockedRepository(tuple(self.products))
 
     def test_get_product(self):
         products = self.repository.get(self.skus[0])

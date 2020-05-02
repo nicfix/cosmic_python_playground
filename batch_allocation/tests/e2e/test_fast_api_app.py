@@ -10,59 +10,52 @@ from batch_allocation.tests.e2e.fixtures import cleanup_product, create_product
 
 
 class FastApiAppTestCase(TestCase):
+    engine = None
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        engine = create_engine("sqlite:///./sql_app.db", echo=False)
+        create_tables(engine)
+        cls.engine = engine
 
     def setUp(self) -> None:
         self.client = TestClient(app)
-        engine = create_engine("sqlite:///./sql_app.db", echo=False)
-        create_tables(engine)
-        self.session = Session(engine)
+        self.session = Session(FastApiAppTestCase.engine)
+        self.batch_ref = 'batch-1'
+        self.order_ref = 'order-5'
+        self.sku = 'RED-CHAIR'
+
+    def tearDown(self) -> None:
+        cleanup_product(self.sku, self.batch_ref, self.order_ref, self.session)
 
     def test_allocate(self):
-        batch_ref = 'batch-1'
-        order_ref = 'order-5'
-        sku = 'RED-CHAIR'
         desired_quantity = 5
-        session = self.session
 
-        def cleanup():
-            cleanup_product(sku, batch_ref, order_ref, session)
-
-        self.addCleanup(cleanup)
-
-        create_product(sku, batch_ref, desired_quantity, self.session)
+        create_product(self.sku, self.batch_ref, desired_quantity, self.session)
 
         response = self.client.post(
             "/allocate",
             json={
-                'order_ref': order_ref,
-                'sku': sku,
+                'order_ref': self.order_ref,
+                'sku': self.sku,
                 'quantity': desired_quantity
             })
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.json(), {'batchref': batch_ref})
+        self.assertEqual(response.json(), {'batchref': self.batch_ref})
 
     def test_allocate_out_of_stock(self):
-        batch_ref = 'batch-1'
-        order_ref = 'order-5'
-        sku = 'RED-CHAIR'
         available_quantity = 10
         desired_quantity = 20
-        session = self.session
 
-        def cleanup():
-            cleanup_product(sku, batch_ref, order_ref, session)
-
-        self.addCleanup(cleanup)
-
-        create_product(sku, batch_ref, available_quantity, self.session)
+        create_product(self.sku, self.batch_ref, available_quantity, self.session)
 
         self.session.commit()
 
         response = self.client.post(
             "/allocate",
             json={
-                'order_ref': order_ref,
-                'sku': sku,
+                'order_ref': self.order_ref,
+                'sku': self.sku,
                 'quantity': desired_quantity
             })
         self.assertEqual(response.status_code, 400)

@@ -1,20 +1,20 @@
 from batch_allocation.adapters.repositories.sql_alchemy import (
-    ProductSQLAlchemyRepository,
+    SQLAlchemyRepository,
 )
 from batch_allocation.domain.exceptions import UnknownSkuError
 from batch_allocation.domain.model import Product
 from batch_allocation.tests.integration.base_test_class import BaseSessionTestCase
 
 
-class ProductRepositoryTestCase(BaseSessionTestCase):
+class RepositoryTestCase(BaseSessionTestCase):
     def test_get_product(self):
-        session = ProductRepositoryTestCase.get_session()
+        session = RepositoryTestCase.get_session()
         session.execute(
             "INSERT INTO products (sku) VALUES "
             '("RED-CHAIR")'
         )
 
-        repository = ProductSQLAlchemyRepository(session)
+        repository = SQLAlchemyRepository(session)
 
         product = repository.get("RED-CHAIR")
 
@@ -23,13 +23,13 @@ class ProductRepositoryTestCase(BaseSessionTestCase):
         session.execute('DELETE FROM products where sku ="RED-CHAIR"')
 
     def test_get_product_wrong_sku(self):
-        session = ProductRepositoryTestCase.get_session()
+        session = RepositoryTestCase.get_session()
         session.execute(
             "INSERT INTO products (sku) VALUES "
             '("RED-CHAIR")'
         )
 
-        repository = ProductSQLAlchemyRepository(session)
+        repository = SQLAlchemyRepository(session)
 
         with self.assertRaises(UnknownSkuError):
             product = repository.get("BLACK-TABLE")
@@ -37,9 +37,9 @@ class ProductRepositoryTestCase(BaseSessionTestCase):
         session.execute('DELETE FROM products where sku ="RED-CHAIR"')
 
     def test_add_product(self):
-        session = ProductRepositoryTestCase.get_session()
+        session = RepositoryTestCase.get_session()
 
-        repository = ProductSQLAlchemyRepository(session)
+        repository = SQLAlchemyRepository(session)
 
         product = Product('NEW-SKU')
 

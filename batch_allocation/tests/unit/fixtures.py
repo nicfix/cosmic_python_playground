@@ -1,51 +1,14 @@
-from typing import Tuple, Iterable
+from typing import Iterable
 
 from batch_allocation.adapters.repositories.abstract import (
-    BatchAbstractRepository, AbstractProductRepository,
+    AbstractRepository,
 )
 from batch_allocation.domain.exceptions import UnknownSkuError
-from batch_allocation.domain.model import Batch, Product
-from batch_allocation.service_layer.unit_of_work.abstract import AbstractBatchesUnitOfWork, AbstractUnitOfWork
+from batch_allocation.domain.model import Product
+from batch_allocation.service_layer.unit_of_work.abstract import AbstractUnitOfWork
 
 
-class MockedBatchRepository(BatchAbstractRepository):
-    """
-    A mocked repository to test the interface behavior, useful to test the related services.
-    """
-
-    def update(self, batch: Batch):
-        pass
-
-    def __init__(self, batches: (Batch,)):
-        """
-        :param batches: (Batch,), the initial order_lines, this parameter has to be immutable!
-        """
-        self.batches = list(batches)
-
-    def get(self, reference: str) -> Batch:
-        return next(b for b in self.batches if b.ref == reference)
-
-    def get_by_sku(self, sku: str) -> [Batch]:
-        return [b for b in self.batches if b.sku == sku]
-
-    def add(self, batch: Batch):
-        self.batches.append(batch)
-
-
-class MockedBatchesUnitOfWork(AbstractBatchesUnitOfWork):
-
-    def __init__(self, mocked_repo: BatchAbstractRepository):
-        self.batches = mocked_repo
-        self.committed = False
-
-    def commit(self):
-        self.committed = True
-
-    def rollback(self):
-        pass
-
-
-class MockedProductRepository(AbstractProductRepository):
+class MockedRepository(AbstractRepository):
 
     def __init__(self, products: Iterable[Product] = ()):
         self.products = list(products)
@@ -60,8 +23,8 @@ class MockedProductRepository(AbstractProductRepository):
         self.products.append(product)
 
 
-class MockedProductsUnitOfWork(AbstractUnitOfWork):
-    def __init__(self, mocked_repo: AbstractProductRepository):
+class MockedUnitOfWork(AbstractUnitOfWork):
+    def __init__(self, mocked_repo: AbstractRepository):
         self.products = mocked_repo
         self.committed = False
 

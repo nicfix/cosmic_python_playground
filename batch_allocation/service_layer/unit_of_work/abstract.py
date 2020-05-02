@@ -1,28 +1,10 @@
 import abc
 
-from batch_allocation.adapters.repositories.abstract import BatchAbstractRepository, AbstractProductRepository
-
-
-class AbstractBatchesUnitOfWork(abc.ABC):
-    batches: BatchAbstractRepository
-
-    def __enter__(self):
-        pass
-
-    def __exit__(self, *args):
-        self.rollback()
-
-    @abc.abstractmethod
-    def commit(self):  # (3)
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def rollback(self):  # (4)
-        raise NotImplementedError
+from batch_allocation.adapters.repositories.abstract import AbstractRepository
 
 
 class AbstractUnitOfWork(abc.ABC):
-    products = AbstractProductRepository
+    products = AbstractRepository
 
     def __enter__(self):
         pass
