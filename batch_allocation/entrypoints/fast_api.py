@@ -30,6 +30,5 @@ def allocate_endpoint(order_line_dto: OrderLineDTO):
     try:
         results = messagebus.handle(event, uow)
         return BatchRefResponse(batchref=results.pop(0))
-
     except services.OutOfStock:
         raise HTTPException(status_code=400, detail="Out of stock")

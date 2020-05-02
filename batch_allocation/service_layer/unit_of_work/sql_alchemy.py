@@ -15,6 +15,7 @@ DEFAULT_SESSION_FACTORY = sessionmaker(bind=engine, autocommit=False, autoflush=
 
 
 class UnitOfWork(AbstractUnitOfWork):
+
     def __init__(self, session_factory=DEFAULT_SESSION_FACTORY, message_bus=messagebus):
         self.session_factory = session_factory
         self.message_bus = message_bus
@@ -28,15 +29,13 @@ class UnitOfWork(AbstractUnitOfWork):
         super().__exit__(*args)
         self.session.close()
 
-    def commit(self):
-        self.session.commit()
-        self.handle_events()
-
-    def handle_events(self):
+    def collect_new_events(self):
         for product in self.products.seen:
             while product.events:
-                event = list(product.events).pop(0)
-                self.message_bus.handle(event, self)
+                yield product.events.pop(0)
+
+    def commit(self):
+        self.session.commit()
 
     def rollback(self):  # (4)
         self.session.rollback()

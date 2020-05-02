@@ -13,6 +13,10 @@ class AbstractUnitOfWork(abc.ABC):
         self.rollback()
 
     @abc.abstractmethod
+    def collect_new_events(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
     def commit(self):  # (3)
         raise NotImplementedError
 

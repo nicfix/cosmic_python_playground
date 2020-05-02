@@ -31,7 +31,10 @@ HANDLERS = {
 
 def handle(event: Event, uow: AbstractUnitOfWork):
     results = []
-    for handler in HANDLERS[type(event)]:
-        results.append(handler(event, uow))
-
+    queue = [event]
+    while queue:
+        event = queue.pop(0)
+        for handler in HANDLERS[type(event)]:
+            results.append(handler(event, uow))
+            queue.extend(uow.collect_new_events())
     return results
