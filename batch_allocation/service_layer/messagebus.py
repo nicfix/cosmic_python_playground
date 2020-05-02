@@ -1,6 +1,7 @@
 # Import the email modules we'll need
-
-from batch_allocation.domain.events import Event, OutOfStock
+from batch_allocation.domain.events import Event, OutOfStock, AllocationRequired
+from batch_allocation.service_layer import services
+from batch_allocation.service_layer.unit_of_work.abstract import AbstractUnitOfWork
 
 
 def send_out_of_stock_notification(event: OutOfStock):
@@ -24,9 +25,13 @@ def send_out_of_stock_notification(event: OutOfStock):
 
 HANDLERS = {
     OutOfStock: [send_out_of_stock_notification],
+    AllocationRequired: [services.allocate_handler]
 }
 
 
-def handle(event: Event):
+def handle(event: Event, uow: AbstractUnitOfWork):
+    results = []
     for handler in HANDLERS[type(event)]:
-        handler(event)
+        results.append(handler(event, uow))
+
+    return results

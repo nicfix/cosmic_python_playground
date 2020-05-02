@@ -36,7 +36,7 @@ class UnitOfWork(AbstractUnitOfWork):
         for product in self.products.seen:
             while product.events:
                 event = list(product.events).pop(0)
-                self.message_bus.handle(event)
+                self.message_bus.handle(event, self)
 
     def rollback(self):  # (4)
         self.session.rollback()
