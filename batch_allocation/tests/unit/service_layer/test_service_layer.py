@@ -1,24 +1,18 @@
 from unittest import TestCase
 
 from batch_allocation.domain.events import AllocationRequired
-from batch_allocation.domain.model import Product
 from batch_allocation.service_layer import services
 from batch_allocation.service_layer.services import (
     OutOfStock,
     UnknownSku,
     OrderLineAlreadyAllocatedConflict,
 )
-from batch_allocation.tests.unit.fixtures import MockedRepository, MockedUnitOfWork
-from batch_allocation.tests.unit.test_domain import create_batch, create_order_line
+from batch_allocation.tests.unit.fixtures import MockedUnitOfWork
+from batch_allocation.tests.unit.service_layer.utils import init_product_repository
+from batch_allocation.tests.unit.test_domain import create_order_line
 
 
-def init_product_repository(sku, purchased_quantity, batches_number) -> MockedRepository:
-    batches = [create_batch(sku, purchased_quantity) for i in range(0, batches_number)]
-    product = Product(sku, batches)
-    return MockedRepository((product,))
-
-
-class ServiceLayerTestCase(TestCase):
+class AllocateTestCase(TestCase):
     def setUp(self) -> None:
         self.sku = "Red Socks"
         self.purchased_quantity = 10

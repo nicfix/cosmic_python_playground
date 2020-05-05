@@ -15,7 +15,7 @@ class OutOfStock(Event):
 @dataclass
 class BatchCreated(Event):
     ref: str
-    sky: str
+    sku: str
     qty: int
     eta: Optional[date] = None
 

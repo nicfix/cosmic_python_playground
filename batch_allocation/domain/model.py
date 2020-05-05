@@ -2,8 +2,6 @@ from dataclasses import dataclass
 from datetime import date
 from typing import Optional, List, Iterable
 
-from sqlalchemy import orm
-
 from batch_allocation.domain import events
 from batch_allocation.domain.events import Event
 from batch_allocation.domain.exceptions import (
@@ -67,19 +65,19 @@ class Product:
         self._events = list(evts)
 
     @property
-    def events(self) -> Iterable[Event]:
+    def events(self) -> List[Event]:
         return self._events
 
     @events.setter
-    def events(self, evts: Iterable[Event]):
+    def events(self, evts: List[Event]):
         self._events = evts
 
     @property
-    def batches(self) -> Iterable[Batch]:
+    def batches(self) -> List[Batch]:
         return self._batches
 
     @batches.setter
-    def batches(self, batches: Iterable[Batch]):
+    def batches(self, batches: List[Batch]):
         self._batches = batches
 
     def allocate(self, order_line: OrderLine) -> Batch:
