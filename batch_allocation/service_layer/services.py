@@ -1,7 +1,12 @@
-from batch_allocation.domain.events import AllocationRequired, BatchCreated
-from batch_allocation.domain.exceptions import OrderLineAlreadyAllocatedError, OutOfStockError, UnknownSkuError
+from batch_allocation.domain.events import AllocationRequired, BatchCreated, BatchQuantityChanged
+from batch_allocation.domain.exceptions import OrderLineAlreadyAllocatedError, OutOfStockError, UnknownSkuError, \
+    UnknownRefError
 from batch_allocation.domain.model import OrderLine, Batch, Product
 from batch_allocation.service_layer.unit_of_work.abstract import AbstractUnitOfWork
+
+
+class UnknownRef(Exception):
+    pass
 
 
 class UnknownSku(Exception):
@@ -14,6 +19,27 @@ class OutOfStock(Exception):
 
 class OrderLineAlreadyAllocatedConflict(Exception):
     pass
+
+
+def change_batch_quantity(event: BatchQuantityChanged, uow: AbstractUnitOfWork) -> int:
+    sku = event.sku
+    ref = event.ref
+    new_quantity = event.qty
+
+    with uow:
+        try:
+            product = uow.products.get(sku)
+        except UnknownSkuError:
+            raise UnknownSku()
+
+        try:
+            batch = product.get_batch(ref)
+        except UnknownRefError():
+            raise UnknownRef()
+
+        batch.purchased_quantity = new_quantity
+
+    return event.qty
 
 
 def add_batch(event: BatchCreated, uow: AbstractUnitOfWork) -> str:

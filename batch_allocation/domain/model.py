@@ -7,7 +7,7 @@ from batch_allocation.domain.events import Event
 from batch_allocation.domain.exceptions import (
     OrderLineAlreadyAllocatedError,
     NotEnoughQuantityAvailableError,
-    UnknownSkuError, OutOfStockError,
+    UnknownSkuError, OutOfStockError, UnknownRefError,
 )
 
 
@@ -20,7 +20,7 @@ class OrderLine(object):
 
 class Batch(object):
     def __init__(
-            self, ref: str, sku: str, purchased_quantity: int, eta: Optional[date]
+            self, ref: str, sku: str, purchased_quantity: int, eta: Optional[date] = None
     ):
         self.ref = ref
         self.sku = sku
@@ -39,6 +39,14 @@ class Batch(object):
     @property
     def available_quantity(self) -> int:
         return self._purchased_quantity - self.allocated_quantity
+
+    @property
+    def purchased_quantity(self):
+        return self._purchased_quantity
+
+    @purchased_quantity.setter
+    def purchased_quantity(self, new_quantity):
+        self._purchased_quantity = new_quantity
 
     def allocate(self, order_line: OrderLine) -> None:
         """
@@ -79,6 +87,12 @@ class Product:
     @batches.setter
     def batches(self, batches: List[Batch]):
         self._batches = batches
+
+    def get_batch(self, ref: str) -> Batch:
+        try:
+            return next(b for b in self.batches if b.ref == ref)
+        except StopIteration:
+            raise UnknownRefError()
 
     def allocate(self, order_line: OrderLine) -> Batch:
         for batch in self.batches:

@@ -10,6 +10,10 @@ class NotEnoughQuantityAvailableError(BatchAllocationError):
     pass
 
 
+class UnknownRefError(BatchAllocationError):
+    pass
+
+
 class UnknownSkuError(BatchAllocationError):
     pass
 
