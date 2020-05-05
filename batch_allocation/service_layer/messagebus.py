@@ -25,7 +25,7 @@ def send_out_of_stock_notification(event: OutOfStock):
 
 HANDLERS = {
     OutOfStock: [send_out_of_stock_notification],
-    AllocationRequired: [services.allocate_handler]
+    AllocationRequired: [services.allocate]
 }
 
 

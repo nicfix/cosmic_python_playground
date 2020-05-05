@@ -16,32 +16,20 @@ class OrderLineAlreadyAllocatedConflict(Exception):
     pass
 
 
-def allocate_handler(event: AllocationRequired,
-                     uow: AbstractUnitOfWork) -> str:
-    """
-    Event handler that delegates to the service function.
-    Part of a 2 steps refactoring.
-    """
-    return allocate(
-        event.order_ref,
-        event.sku,
-        event.qty,
-        uow
-    )
-
-
-def allocate(order_ref: str, sku: str, quantity: int, uow: AbstractUnitOfWork) -> str:
+def allocate(event: AllocationRequired,
+             uow: AbstractUnitOfWork) -> str:
     """
     Allocates an order_line given the batches already stored on database.
-    :param order_ref: str, the line that we want to allocate
-    :param sku: str, the product's sku
-    :param quantity: int, the desired quantity
+    :param event: AllocationRequired, the event received from the messagebus
     :param uow: AbstractUnitOfWork, the Unit Of Work
     :raises: OrderLineAlreadyAllocatedError, in case the order line was already allocated to a batch
     :raises: OutOfStockError, in case no batch can satisfy the request
     :raises: UnknownSku, in case there's no batch with the same sku of the order line
     :return: Batch, the batch that the order was allocated to
     """
+    order_ref = event.order_ref
+    sku = event.sku
+    quantity = event.qty
 
     order_line = OrderLine(
         order_ref=order_ref,

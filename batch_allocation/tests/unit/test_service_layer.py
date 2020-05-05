@@ -37,7 +37,7 @@ class ServiceLayerTestCase(TestCase):
             order_line.quantity
         )
 
-        batchref = services.allocate_handler(event, uow)
+        batchref = services.allocate(event, uow)
 
         product = products_repository.products[0]
 
@@ -62,7 +62,7 @@ class ServiceLayerTestCase(TestCase):
         )
 
         with self.assertRaises(OutOfStock):
-            services.allocate_handler(event, uow)
+            services.allocate(event, uow)
 
     def test_allocate_unknown_sku(self) -> None:
         desired_quantity = 10
@@ -79,7 +79,7 @@ class ServiceLayerTestCase(TestCase):
         )
 
         with self.assertRaises(UnknownSku):
-            services.allocate_handler(event, uow)
+            services.allocate(event, uow)
 
     def test_allocate_duplicated_order_line(self) -> None:
         desired_quantity = 10
@@ -95,7 +95,7 @@ class ServiceLayerTestCase(TestCase):
             order_line.quantity
         )
 
-        services.allocate_handler(event, uow)
+        services.allocate(event, uow)
 
         with self.assertRaises(OrderLineAlreadyAllocatedConflict):
-            services.allocate_handler(event, uow)
+            services.allocate(event, uow)
