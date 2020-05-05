@@ -33,13 +33,9 @@ def change_batch_quantity(event: BatchQuantityChanged, uow: AbstractUnitOfWork) 
             raise UnknownSku()
 
         try:
-            batch = product.get_batch(ref)
+            return product.change_batch_quantity(ref, new_quantity)
         except UnknownRefError():
             raise UnknownRef()
-
-        batch.purchased_quantity = new_quantity
-
-    return event.qty
 
 
 def add_batch(event: BatchCreated, uow: AbstractUnitOfWork) -> str:

@@ -88,6 +88,12 @@ class Product:
     def batches(self, batches: List[Batch]):
         self._batches = batches
 
+    def change_batch_quantity(self, ref, new_quantity) -> int:
+        batch = self.get_batch(ref)
+        batch.purchased_quantity = new_quantity
+
+        return new_quantity
+
     def get_batch(self, ref: str) -> Batch:
         try:
             return next(b for b in self.batches if b.ref == ref)
