@@ -1,4 +1,4 @@
-from batch_allocation.domain.commands import BatchCreated, AllocationRequired, BatchQuantityChanged
+from batch_allocation.domain.commands import CreateBatch, Allocate, ChangeBatchQuantity
 from batch_allocation.domain.exceptions import OrderLineAlreadyAllocatedError, OutOfStockError, UnknownSkuError, \
     UnknownRefError
 from batch_allocation.domain.model import OrderLine, Batch, Product
@@ -21,7 +21,7 @@ class OrderLineAlreadyAllocatedConflict(Exception):
     pass
 
 
-def change_batch_quantity(event: BatchQuantityChanged,
+def change_batch_quantity(event: ChangeBatchQuantity,
                           uow: AbstractUnitOfWork) -> int:
     sku = event.sku
     ref = event.ref
@@ -39,7 +39,7 @@ def change_batch_quantity(event: BatchQuantityChanged,
             raise UnknownRef()
 
 
-def add_batch(event: BatchCreated,
+def add_batch(event: CreateBatch,
               uow: AbstractUnitOfWork) -> str:
     ref = event.ref
     sku = event.sku
@@ -65,7 +65,7 @@ def add_batch(event: BatchCreated,
     return new_batch.ref
 
 
-def allocate(event: AllocationRequired,
+def allocate(event: Allocate,
              uow: AbstractUnitOfWork) -> str:
     """
     Allocates an order_line given the batches already stored on database.

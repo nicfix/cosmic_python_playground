@@ -8,7 +8,7 @@ class Command:
 
 
 @dataclass
-class BatchCreated(Command):
+class CreateBatch(Command):
     ref: str
     sku: str
     qty: int
@@ -16,14 +16,14 @@ class BatchCreated(Command):
 
 
 @dataclass
-class AllocationRequired(Command):
+class Allocate(Command):
     order_ref: str
     sku: str
     qty: int
 
 
 @dataclass
-class BatchQuantityChanged(Command):
+class ChangeBatchQuantity(Command):
     ref: str
     sku: str
     qty: int

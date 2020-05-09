@@ -1,7 +1,7 @@
 import uuid
 from unittest import TestCase
 
-from batch_allocation.domain.commands import BatchCreated
+from batch_allocation.domain.commands import CreateBatch
 from batch_allocation.domain.model import Product
 from batch_allocation.service_layer import messagebus
 from batch_allocation.tests.unit.fixtures import MockedRepository, MockedUnitOfWork
@@ -17,7 +17,7 @@ class BatchCreationTestCase(TestCase):
         mocked_repo = MockedRepository()
         mocked_uow = MockedUnitOfWork(mocked_repo)
 
-        event = BatchCreated(
+        event = CreateBatch(
             ref=ref,
             sku=sku,
             qty=quantity,
@@ -48,7 +48,7 @@ class BatchCreationTestCase(TestCase):
         mocked_repo = MockedRepository((product,))
         mocked_uow = MockedUnitOfWork(mocked_repo)
 
-        event = BatchCreated(
+        event = CreateBatch(
             ref=ref,
             sku=sku,
             qty=quantity,

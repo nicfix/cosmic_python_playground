@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-from batch_allocation.domain.commands import AllocationRequired
+from batch_allocation.domain.commands import Allocate
 from batch_allocation.service_layer import services, messagebus
 from batch_allocation.service_layer.unit_of_work.sql_alchemy import UnitOfWork
 
@@ -21,7 +21,7 @@ class BatchRefResponse(BaseModel):
 @app.post("/allocate", status_code=201)
 def allocate_endpoint(order_line_dto: OrderLineDTO):
     uow = UnitOfWork()
-    event = AllocationRequired(
+    event = Allocate(
         order_ref=order_line_dto.order_ref,
         sku=order_line_dto.sku,
         qty=order_line_dto.quantity
