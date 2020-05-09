@@ -1,4 +1,4 @@
-from batch_allocation.domain.events import AllocationRequired, BatchCreated, BatchQuantityChanged
+from batch_allocation.domain.commands import BatchCreated, AllocationRequired, BatchQuantityChanged
 from batch_allocation.domain.exceptions import OrderLineAlreadyAllocatedError, OutOfStockError, UnknownSkuError, \
     UnknownRefError
 from batch_allocation.domain.model import OrderLine, Batch, Product

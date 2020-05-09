@@ -1,6 +1,7 @@
 import uuid
 from unittest import TestCase
 
+import batch_allocation.domain.commands
 from batch_allocation.domain import events
 from batch_allocation.service_layer import messagebus
 from batch_allocation.tests.unit.fixtures import MockedRepository, MockedUnitOfWork
@@ -18,12 +19,12 @@ class ChangeBatchQuantityTestCase(TestCase):
         mocked_unit_of_work = MockedUnitOfWork(mocked_repo)
 
         events_history = [
-            events.BatchCreated(
+            batch_allocation.domain.commands.BatchCreated(
                 ref=batchref_to_be_changed,
                 sku=sku,
                 qty=original_quantity
             ),
-            events.BatchCreated(
+            batch_allocation.domain.commands.BatchCreated(
                 ref=other_batchref,
                 sku=sku,
                 qty=original_quantity
@@ -41,7 +42,7 @@ class ChangeBatchQuantityTestCase(TestCase):
 
     def test_decrease_quantity_no_re_allocation(self):
         new_quantity = 5
-        event = events.BatchQuantityChanged(sku=self.sku, ref=self.batchref_to_be_changed, qty=new_quantity)
+        event = batch_allocation.domain.commands.BatchQuantityChanged(sku=self.sku, ref=self.batchref_to_be_changed, qty=new_quantity)
 
         results = messagebus.handle(event, self.uow)
 
@@ -56,12 +57,12 @@ class ChangeBatchQuantityTestCase(TestCase):
 
         # We need first to allocate the orders
         allocation_events = [
-            events.AllocationRequired(
+            batch_allocation.domain.commands.AllocationRequired(
                 order_ref=str(uuid.uuid4()),
                 sku=self.sku,
                 qty=int(allocated_quantity / 2)
             ),
-            events.AllocationRequired(
+            batch_allocation.domain.commands.AllocationRequired(
                 order_ref=str(uuid.uuid4()),
                 sku=self.sku,
                 qty=int(allocated_quantity / 2)
@@ -83,7 +84,7 @@ class ChangeBatchQuantityTestCase(TestCase):
         # Now we can test our quantity change
         new_quantity = 10
 
-        allocation_change_event = events.BatchQuantityChanged(
+        allocation_change_event = batch_allocation.domain.commands.BatchQuantityChanged(
             ref=self.batchref_to_be_changed,
             sku=self.sku,
             qty=new_quantity

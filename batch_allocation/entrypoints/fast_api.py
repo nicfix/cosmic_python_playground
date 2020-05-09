@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-from batch_allocation.domain.events import AllocationRequired
+from batch_allocation.domain.commands import AllocationRequired
 from batch_allocation.service_layer import services, messagebus
 from batch_allocation.service_layer.unit_of_work.sql_alchemy import UnitOfWork
 

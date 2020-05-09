@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from batch_allocation.domain.events import AllocationRequired
+from batch_allocation.domain.commands import AllocationRequired
 from batch_allocation.service_layer import services
 from batch_allocation.service_layer.services import (
     OutOfStock,

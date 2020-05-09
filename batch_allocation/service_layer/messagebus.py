@@ -1,5 +1,9 @@
 # Import the email modules we'll need
-from batch_allocation.domain.events import Event, OutOfStock, AllocationRequired, BatchCreated, BatchQuantityChanged
+from typing import Union
+
+from batch_allocation.domain import commands, events
+from batch_allocation.domain.commands import BatchCreated, AllocationRequired, BatchQuantityChanged
+from batch_allocation.domain.events import Event, OutOfStock
 from batch_allocation.service_layer import services
 from batch_allocation.service_layer.unit_of_work.abstract import AbstractUnitOfWork
 
@@ -31,12 +35,15 @@ HANDLERS = {
 }
 
 
-def handle(event: Event, uow: AbstractUnitOfWork):
+Message = Union[events.Event, commands.Command]
+
+
+def handle(message: Message, uow: AbstractUnitOfWork):
     results = []
-    queue = [event]
+    queue = [message]
     while queue:
-        event = queue.pop(0)
-        for handler in HANDLERS[type(event)]:
-            results.append(handler(event, uow))
+        message = queue.pop(0)
+        for handler in HANDLERS[type(message)]:
+            results.append(handler(message, uow))
             queue.extend(uow.collect_new_events())
     return results
