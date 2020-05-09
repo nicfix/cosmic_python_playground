@@ -1,4 +1,5 @@
 # Import the email modules we'll need
+import logging
 from typing import Union
 
 from batch_allocation.domain import commands, events
@@ -6,6 +7,8 @@ from batch_allocation.domain.commands import CreateBatch, Allocate, ChangeBatchQ
 from batch_allocation.domain.events import OutOfStock
 from batch_allocation.service_layer import services
 from batch_allocation.service_layer.unit_of_work.abstract import AbstractUnitOfWork
+
+logger = logging.getLogger(__file__)
 
 
 def send_out_of_stock_notification(event: OutOfStock):
@@ -40,15 +43,23 @@ Message = Union[events.Event, commands.Command]
 
 
 def handle_event(event: events.Event, uow: AbstractUnitOfWork):
-    for handler in EVENTS_HANDLERS[type(event)]:
-        handler(event, uow)
+    try:
+        for handler in EVENTS_HANDLERS[type(event)]:
+            handler(event, uow)
+    except Exception as e:
+        logger.exception('Exception handling command %s: %s' % (event, e))
+        pass
 
 
 def handle_command(command: commands.Command, uow: AbstractUnitOfWork):
     results = []
-    for handler in COMMANDS_HANDLERS[type(command)]:
-        results.append(handler(command, uow))
-    return results
+    try:
+        for handler in COMMANDS_HANDLERS[type(command)]:
+            results.append(handler(command, uow))
+        return results
+    except Exception as e:
+        logger.exception('Exception handling command %s: %s' % (command, e))
+        raise e
 
 
 def handle(message: Message, uow: AbstractUnitOfWork):
