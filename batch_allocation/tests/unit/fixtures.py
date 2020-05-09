@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Iterable, List
 
 from batch_allocation.adapters.repositories.abstract import (
     AbstractRepository,
@@ -13,6 +13,10 @@ class MockedRepository(AbstractRepository):
     def __init__(self, products: Iterable[Product] = ()):
         self.products = list(products)
 
+    @property
+    def seen(self) -> List[Product]:
+        return self.products
+
     def get(self, sku: str) -> Product:
         try:
             return next(p for p in self.products if p.sku == sku)
@@ -25,7 +29,7 @@ class MockedRepository(AbstractRepository):
 
 class MockedUnitOfWork(AbstractUnitOfWork):
     def collect_new_events(self):
-        products = [product for product in self.products.products]
+        products = [product for product in self.products.seen]
         events = []
         for product in products:
             events += product.events

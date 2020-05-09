@@ -2,7 +2,6 @@ import uuid
 from unittest import TestCase
 
 from batch_allocation.domain import events
-from batch_allocation.domain.model import Product, Batch
 from batch_allocation.service_layer import messagebus
 from batch_allocation.tests.unit.fixtures import MockedRepository, MockedUnitOfWork
 
