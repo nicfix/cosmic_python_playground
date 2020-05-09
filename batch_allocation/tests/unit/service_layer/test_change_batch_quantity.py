@@ -43,3 +43,4 @@ class ChangeBatchQuantityTestCase(TestCase):
 
         product = self.uow.products.get(self.sku)
         self.assertEqual(product.batches[0].available_quantity, new_quantity)
+

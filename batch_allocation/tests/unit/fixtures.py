@@ -27,7 +27,7 @@ class MockedUnitOfWork(AbstractUnitOfWork):
     def collect_new_events(self):
         return []
 
-    def __init__(self, mocked_repo: AbstractRepository):
+    def __init__(self, mocked_repo: AbstractRepository = MockedRepository(())):
         self.products = mocked_repo
         self.committed = False
 

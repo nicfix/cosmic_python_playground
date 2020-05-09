@@ -21,7 +21,8 @@ class OrderLineAlreadyAllocatedConflict(Exception):
     pass
 
 
-def change_batch_quantity(event: BatchQuantityChanged, uow: AbstractUnitOfWork) -> int:
+def change_batch_quantity(event: BatchQuantityChanged,
+                          uow: AbstractUnitOfWork) -> int:
     sku = event.sku
     ref = event.ref
     new_quantity = event.qty
@@ -38,7 +39,8 @@ def change_batch_quantity(event: BatchQuantityChanged, uow: AbstractUnitOfWork) 
             raise UnknownRef()
 
 
-def add_batch(event: BatchCreated, uow: AbstractUnitOfWork) -> str:
+def add_batch(event: BatchCreated,
+              uow: AbstractUnitOfWork) -> str:
     ref = event.ref
     sku = event.sku
     quantity = event.qty
