@@ -15,7 +15,8 @@ class ChangeBatchQuantityTestCase(TestCase):
         sku = 'Red Shoes'
         original_quantity = 20
 
-        mocked_unit_of_work = MockedUnitOfWork()
+        mocked_repo = MockedRepository(())
+        mocked_unit_of_work = MockedUnitOfWork(mocked_repo)
 
         events_history = [
             events.BatchCreated(

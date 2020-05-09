@@ -50,8 +50,11 @@ class Batch(object):
 
     def allocate(self, order_line: OrderLine) -> None:
         """
-        :param order_line:
-        :return:
+        Attempts to allocate an order line to this batch, raises exceptions in case of failure.
+        :param order_line: OrderLine
+        :raises UnknownSkuError: in case of a wrong sku in the order line
+        :raises OrderLineAlreadyAllocatedError: if the same order line is already allocated to this batch
+        :raises NotEnoughQuantityAvailable: if the order line cannot be allocated to the current batch
         """
         if order_line.sku != self.sku:
             raise UnknownSkuError()
@@ -63,6 +66,12 @@ class Batch(object):
             raise NotEnoughQuantityAvailableError()
 
         self._allocated_order_lines.append(order_line)
+
+    def deallocate_one(self) -> OrderLine:
+        """
+        Deallocates an orderline from this batch and returns it.
+        """
+        return self._allocated_order_lines.pop()
 
 
 class Product:
@@ -91,6 +100,15 @@ class Product:
     def change_batch_quantity(self, ref, new_quantity) -> int:
         batch = self.get_batch(ref)
         batch.purchased_quantity = new_quantity
+        while batch.available_quantity < 0:
+            line = batch.deallocate_one()
+            self.events.append(
+                events.AllocationRequired(
+                    order_ref=line.order_ref,
+                    sku=line.sku,
+                    qty=line.quantity
+                )
+            )
 
         return new_quantity
 

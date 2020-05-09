@@ -25,9 +25,15 @@ class MockedRepository(AbstractRepository):
 
 class MockedUnitOfWork(AbstractUnitOfWork):
     def collect_new_events(self):
-        return []
+        products = [product for product in self.products.products]
+        events = []
+        for product in products:
+            events += product.events
+            product.events = []  # Cleanup events that have been collected, I should find a better way/place to
+            # store the events, let's see if they propose something further in the book
+        return events
 
-    def __init__(self, mocked_repo: AbstractRepository = MockedRepository(())):
+    def __init__(self, mocked_repo: MockedRepository):
         self.products = mocked_repo
         self.committed = False
 
