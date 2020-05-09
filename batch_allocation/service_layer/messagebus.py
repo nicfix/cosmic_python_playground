@@ -3,7 +3,7 @@ from typing import Union
 
 from batch_allocation.domain import commands, events
 from batch_allocation.domain.commands import CreateBatch, Allocate, ChangeBatchQuantity
-from batch_allocation.domain.events import Event, OutOfStock
+from batch_allocation.domain.events import OutOfStock
 from batch_allocation.service_layer import services
 from batch_allocation.service_layer.unit_of_work.abstract import AbstractUnitOfWork
 
@@ -23,19 +23,32 @@ def send_out_of_stock_notification(event: OutOfStock):
     s.send_message(msg)
     s.quit()
     """
+    pass
 
-    return event
 
+EVENTS_HANDLERS = {
+    OutOfStock: [send_out_of_stock_notification]
+}
 
-HANDLERS = {
-    OutOfStock: [send_out_of_stock_notification],
+COMMANDS_HANDLERS = {
     Allocate: [services.allocate],
     CreateBatch: [services.add_batch],
     ChangeBatchQuantity: [services.change_batch_quantity]
 }
 
-
 Message = Union[events.Event, commands.Command]
+
+
+def handle_event(event: events.Event, uow: AbstractUnitOfWork):
+    for handler in EVENTS_HANDLERS[type(event)]:
+        handler(event, uow)
+
+
+def handle_command(command: commands.Command, uow: AbstractUnitOfWork):
+    results = []
+    for handler in COMMANDS_HANDLERS[type(command)]:
+        results.append(handler(command, uow))
+    return results
 
 
 def handle(message: Message, uow: AbstractUnitOfWork):
@@ -43,7 +56,11 @@ def handle(message: Message, uow: AbstractUnitOfWork):
     queue = [message]
     while queue:
         message = queue.pop(0)
-        for handler in HANDLERS[type(message)]:
-            results.append(handler(message, uow))
-            queue.extend(uow.collect_new_events())
+        if isinstance(message, events.Event):
+            handle_event(message, uow)
+        elif isinstance(message, commands.Command):
+            results.extend(handle_command(message, uow))
+        else:
+            raise Exception(f'{message} was not an Event or Command')
+        queue.extend(uow.collect_new_events())
     return results
