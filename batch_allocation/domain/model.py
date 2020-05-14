@@ -75,7 +75,7 @@ class Batch(object):
         return self._allocated_order_lines.pop()
 
 
-class Product:
+class Product(object):
 
     def __init__(self, sku: str, batches: Iterable[Batch] = (), evts: Iterable[events.Event] = ()):
         self.sku = sku

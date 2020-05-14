@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from batch_allocation.domain.commands import Allocate
 from batch_allocation.service_layer import services, messagebus
 from batch_allocation.service_layer.unit_of_work.sql_alchemy import UnitOfWork
+from batch_allocation.views.product import get_allocations
 
 app = FastAPI()
 
@@ -32,3 +33,10 @@ def allocate_endpoint(order_line_dto: OrderLineDTO):
         return BatchRefResponse(batchref=results.pop(0))
     except services.OutOfStock:
         raise HTTPException(status_code=400, detail="Out of stock")
+
+
+@app.get("/{sku}/allocations/")
+def allocations(sku: str):
+    uow = UnitOfWork()
+
+    return get_allocations(sku, uow)

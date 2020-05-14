@@ -59,3 +59,8 @@ class FastApiAppTestCase(TestCase):
                 'quantity': desired_quantity
             })
         self.assertEqual(response.status_code, 400)
+
+    def test_allocations(self):
+        response = self.client.get(
+            f"/{self.sku}/allocations")
+        self.assertEqual(response.status_code, 200)

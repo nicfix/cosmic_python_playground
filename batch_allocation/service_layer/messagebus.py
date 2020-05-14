@@ -4,7 +4,7 @@ from typing import Union
 
 from batch_allocation.domain import commands, events
 from batch_allocation.domain.commands import CreateBatch, Allocate, ChangeBatchQuantity
-from batch_allocation.domain.events import OutOfStock
+from batch_allocation.domain.events import OutOfStock, OrderAllocated
 from batch_allocation.service_layer import services
 from batch_allocation.service_layer.unit_of_work.abstract import AbstractUnitOfWork
 
@@ -30,7 +30,10 @@ def send_out_of_stock_notification(event: OutOfStock):
 
 
 EVENTS_HANDLERS = {
-    OutOfStock: [send_out_of_stock_notification]
+    OutOfStock: [send_out_of_stock_notification],
+    OrderAllocated: [
+
+    ]
 }
 
 COMMANDS_HANDLERS = {
@@ -67,10 +70,10 @@ def handle(message: Message, uow: AbstractUnitOfWork):
     queue = [message]
     while queue:
         message = queue.pop(0)
-        if isinstance(message, events.Event):
-            handle_event(message, uow)
-        elif isinstance(message, commands.Command):
+        if isinstance(message, commands.Command):
             results.extend(handle_command(message, uow))
+        elif isinstance(message, events.Event):
+            handle_event(message, uow)
         else:
             raise Exception(f'{message} was not an Event or Command')
         queue.extend(uow.collect_new_events())
