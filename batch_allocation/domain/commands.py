@@ -2,8 +2,10 @@ from dataclasses import dataclass
 from datetime import date
 from typing import Optional
 
+from batch_allocation.domain.events import Event
 
-class Command:
+
+class Command(Event):
     pass
 
 
