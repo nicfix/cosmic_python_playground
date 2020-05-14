@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import date
 from typing import Optional, List, Iterable
 
+import batch_allocation.domain.commands
 from batch_allocation.domain import events
 from batch_allocation.domain.events import Event
 from batch_allocation.domain.exceptions import (
@@ -103,7 +104,7 @@ class Product:
         while batch.available_quantity < 0:
             line = batch.deallocate_one()
             self.events.append(
-                events.AllocationRequired(
+                batch_allocation.domain.commands.Allocate(
                     order_ref=line.order_ref,
                     sku=line.sku,
                     qty=line.quantity

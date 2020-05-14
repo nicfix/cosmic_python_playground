@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from batch_allocation.domain.events import AllocationRequired
+from batch_allocation.domain.commands import Allocate
 from batch_allocation.service_layer import services
 from batch_allocation.service_layer.services import (
     OutOfStock,
@@ -25,7 +25,7 @@ class AllocateTestCase(TestCase):
 
         uow = MockedUnitOfWork(products_repository)
 
-        event = AllocationRequired(
+        event = Allocate(
             order_line.order_ref,
             order_line.sku,
             order_line.quantity
@@ -49,7 +49,7 @@ class AllocateTestCase(TestCase):
 
         uow = MockedUnitOfWork(products_repository)
 
-        event = AllocationRequired(
+        event = Allocate(
             order_line.order_ref,
             order_line.sku,
             order_line.quantity
@@ -66,7 +66,7 @@ class AllocateTestCase(TestCase):
 
         uow = MockedUnitOfWork(products_repository)
 
-        event = AllocationRequired(
+        event = Allocate(
             order_line.order_ref,
             order_line.sku,
             order_line.quantity
@@ -83,7 +83,7 @@ class AllocateTestCase(TestCase):
 
         uow = MockedUnitOfWork(products_repository)
 
-        event = AllocationRequired(
+        event = Allocate(
             order_line.order_ref,
             order_line.sku,
             order_line.quantity
