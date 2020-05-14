@@ -12,6 +12,15 @@ def create_product(sku, batch_ref, quantity, session):
     session.commit()
 
 
+def allocate_line_item(id, sku, order_ref, batch_ref, quantity, session):
+    session.execute(
+        f"INSERT INTO order_lines (id, sku, quantity, order_ref, allocated_batch_ref)"
+        f" VALUES ('{id}','{sku}','{quantity}','{order_ref}','{batch_ref}')"
+    )
+
+    session.commit()
+
+
 def cleanup_product(sku, batch_ref, order_ref, session):
     session.execute(
         f"DELETE FROM order_lines WHERE order_ref = '{order_ref}'"

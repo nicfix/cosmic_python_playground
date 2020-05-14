@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from batch_allocation.adapters.orm.orm import create_tables
 from batch_allocation.entrypoints.fast_api import app
-from batch_allocation.tests.e2e.fixtures import cleanup_product, create_product
+from batch_allocation.tests.e2e.fixtures import cleanup_product, create_product, allocate_line_item
 
 
 class FastApiAppTestCase(TestCase):
@@ -49,8 +49,6 @@ class FastApiAppTestCase(TestCase):
 
         create_product(self.sku, self.batch_ref, available_quantity, self.session)
 
-        self.session.commit()
-
         response = self.client.post(
             "/allocate",
             json={
@@ -61,6 +59,17 @@ class FastApiAppTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_allocations(self):
+        available_quantity = 10
+        order_ref = '12345'
+        create_product(self.sku, self.batch_ref, available_quantity, self.session)
+
+        allocate_line_item(1, self.sku, order_ref, self.batch_ref, available_quantity, self.session)
+
         response = self.client.get(
             f"/{self.sku}/allocations")
         self.assertEqual(response.status_code, 200)
+
+        allocations = response.json()
+        self.assertEqual(1, len(allocations))
+        for item in allocations:
+            self.assertEqual(self.sku, item.get('sku'))

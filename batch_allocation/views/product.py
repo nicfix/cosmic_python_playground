@@ -19,4 +19,4 @@ def get_allocations(sku: str, uow: AbstractUnitOfWork) -> List[Allocation]:
             ' WHERE a.sku = :sku',
             dict(sku=sku)
         ))
-    return [Allocation(sku, batchref) for sku, batchref in results]
+    return [Allocation(sku=sku, batchref=batchref) for sku, batchref in results]
